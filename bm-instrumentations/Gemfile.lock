@@ -1,0 +1,46 @@
+PATH
+  remote: .
+  specs:
+    bm-instrumentations (0.1.0)
+      prometheus-client (~> 2.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    diff-lcs (1.4.4)
+    mysql2 (0.5.3)
+    prometheus-client (2.1.0)
+    rack (2.2.3)
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
+    rake (11.3.0)
+    rspec (3.10.0)
+      rspec-core (~> 3.10.0)
+      rspec-expectations (~> 3.10.0)
+      rspec-mocks (~> 3.10.0)
+    rspec-core (3.10.1)
+      rspec-support (~> 3.10.0)
+    rspec-expectations (3.10.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.10.0)
+    rspec-mocks (3.10.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.10.0)
+    rspec-support (3.10.2)
+    sequel (4.49.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bm-instrumentations!
+  bundler (~> 2.1)
+  mysql2 (~> 0.5)
+  rack (~> 2.2)
+  rack-test (~> 1.1)
+  rake (~> 11.2)
+  rspec (~> 3.10)
+  sequel (~> 4.49)
+
+BUNDLED WITH
+   2.1.4
