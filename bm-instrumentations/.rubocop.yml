@@ -1,0 +1,24 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.7.2
+
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/bm/instrumentations/**/*'
+    - 'spec/sequel/extensions/**'
+    - 'spec/roda/plugins/**'
+    - 'bm-instrumentations.gemspec'
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false

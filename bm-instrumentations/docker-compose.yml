@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  mysql:
+    image: "mariadb"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql:delegated
+
+  minio:
+    image: "minio/minio"
+    command: "server /var/lib/minio"
+    environment:
+      MINIO_ACCESS_KEY: "AccessKey"
+      MINIO_SECRET_KEY: "SecretKey"
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio-data:/var/lib/minio:delegated
+
+volumes:
+  mysql-data:
+  minio-data:
+
