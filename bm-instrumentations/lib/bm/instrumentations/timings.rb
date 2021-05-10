@@ -29,14 +29,14 @@ module BM
     class Timings < Module
       # Stores a module configuration into variables for later usage
       #
-      # @param metrics_prefix [Symbol]
+      # @param metrics_prefix [Symbol] each metric name will have this prefix
       # @param registry [Prometheus::Client::Registry, nil] overrides the default registry
       def initialize(metrics_prefix, registry)
         super()
         @metrics_prefix = metrics_prefix
         @registry = registry || Prometheus::Client.registry
       end
-      private_methods :initialize
+      private_class_method :new
 
       # The public constructor
       #

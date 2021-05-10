@@ -76,11 +76,6 @@ metrics into Prometheus.
 # Apply an extension
 db = Sequel.connect(database_url)
 db.extension(:prometheus_instrumentation)
-
-# Or apply an extension and override the default Prometheus registry
-db = Sequel.connect(database_url)
-db.extension(:prometheus_instrumentation)
-db.prometheus_registry = registry
 ```
 
 A list of collected metrics
@@ -106,10 +101,6 @@ require 'bm/instrumentations/aws/collector'
 
 # Apply a plugin
 Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
-Aws::S3::Client.new(...)
-
-# Or apply a plugin and override the default registry
-Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector[registry])
 Aws::S3::Client.new(...)
 ```
 

@@ -15,10 +15,10 @@ module BM
       #   Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector[registry])
       #
       # @attr [MetricsCollection] metrics_collection
-      # @see [Aws::ClientSideMonitoring::Publisher]
+      # @see Aws::ClientSideMonitoring::Publisher
       class Collector
         attr_reader :metrics_collection
-        attr_accessor :agent_port, :agent_host # for Aws::ClientSideMonitoring::Publisher compatibility
+        attr_accessor :agent_port, :agent_host # for {Aws::ClientSideMonitoring::Publisher} compatibility
 
         # @param registry [Prometheus::Client::Registry, nil] overrides a default registry
         def initialize(registry = nil)

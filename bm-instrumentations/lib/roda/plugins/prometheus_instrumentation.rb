@@ -19,7 +19,7 @@ class Roda
     #
     # @example Apply plugin which non default configuration
     #   class API < Roda
-    #     plugin(:prometheus_instrumentation, registry: registry, exclude_path: %w[/metrics /health /ping])
+    #     plugin(:prometheus_instrumentation, exclude_path: %w[/metrics /health /ping])
     #   end
     module PrometheusInstrumentation
       # @param app [Any]

@@ -26,7 +26,6 @@ class Roda
     #   end
     module Endpoint
       # @param app [Any]
-      # @param options [Hash]
       def self.configure(app)
         app.extend ClassMethods
       end
