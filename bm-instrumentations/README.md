@@ -32,6 +32,8 @@ Or install it yourself as:
 $ gem install bm-instrumentations
 ```
 
+<hr>
+
 ## Rack Metrics Collector
 
 `Sequel::Extensions::PrometheusInstrumentation` is a Rack middleware that collect metrics for HTTP request and 
@@ -50,22 +52,23 @@ The middleware has some optional parameters:
 |`exclude_path` | `String`<br>`Array<String>` | a list of ignored path names, for that paths the metrics won’t be record |
 |`registry` | `Prometheus::Client::Registry` | override the default Prometheus registry |
 
-A list of collected metrics
+#### Collected metrics
 
-- `counter` `http_server_requests_total(method path status)`<br> 
-  is the total number of HTTP requests handled by the Rack application
-- `counter` `http_server_exceptions_total(method path exception)`<br> 
-  is the total number of uncaught exceptions raised by the Rack application
-- `histogram` `http_server_requests_duration_seconds(method path status)`<br> 
-  is the HTTP response times in seconds from the Rack application
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `http_server_requests_total` | counter |  `method`<br>`path`<br>`status` | the total number of HTTP requests handled by the Rack application |
+| `http_server_exceptions_total` | counter | `method`<br>`path`<br>`exception` | the total number of uncaught exceptions raised by the Rack application |
+| `http_server_requests_duration_seconds` | histogram | `method`<br>`path`<br>`status` | the HTTP response times in seconds from the Rack application |
 
-Labels description
+#### Labels
 
 * `method` is a HTTP method name such as `GET` or `POST`
 * `path` is an endpoint’s path that handled a request, `none` if undefined
 * `status` is a HTTP status code from response such as `200` or `500`
 * `exception` is an uncaught exception class name such as `RuntimeError` or
 `Errno::ENOENT`
+
+<hr>
 
 ## Sequel Metrics Collector
 
@@ -78,18 +81,20 @@ db = Sequel.connect(database_url)
 db.extension(:prometheus_instrumentation)
 ```
 
-A list of collected metrics
+#### Collected metrics
 
-* `counter` `sequel_queries_total(database query status)`<br> 
-  is how many Sequel queries processed, partitioned by status
-* `histogram` `sequel_queries_duration_seconds(database query status)` 
-  is the duration in seconds that a Sequel queries spent
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `sequel_queries_total` | counter | `database`<br>`query`<br>`status` | how many Sequel queries processed, partitioned by status |
+| `sequel_queries_duration_seconds` | histogram | `database`<br>`status`<br>`status` | the duration in seconds that a Sequel queries spent |
 
-Labels description
+#### Labels
 
 * `database` is a database name that a connection connected
 * `query` is a query statement name such as `select`, `update`
 * `status` one of `success` or `failure`
+
+<hr>
 
 ## AWS Client Metrics Collector
 
@@ -104,23 +109,23 @@ Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
 Aws::S3::Client.new(...)
 ```
 
-A list of collected metrics
+#### Collected metrics
+ 
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `aws_sdk_client_requests_total` | counter | `service`<br>`api`<br>`status` | the total number of successful or failed API calls from AWS client to AWS services |
+| `aws_sdk_client_requests_duration_seconds` | histogram | `service`<br>`api`<br>`status` | the total time in seconds for the AWS Client to make a call to AWS services |
+| `aws_sdk_client_retries_total` | counter | `service`<br>`api` | the total number retries of failed API calls from AWS client to AWS services |
+| `aws_sdk_client_exceptions_total` | counter | `service`<br>`api`<br>`exception` | the total number of AWS API calls that fail |
 
-* `counter` `aws_sdk_client_requests_total(service api status)`<br> 
-  is the total number of successful or failed API calls from AWS client to AWS services
-* `histogram` `aws_sdk_client_requests_duration_seconds(service api status)`<br> 
-  is the total time in seconds for the AWS Client to make a call to AWS services
-* `counter` `aws_sdk_client_retries_total(service api)` 
-  is the total number retries of failed API calls from AWS client to AWS services
-* `counter` `aws_sdk_client_exceptions_total(service api exception)` 
-  is the total number of AWS API calls that fail 
-
-Labels description
+#### Labels
 
 * `service` is an AWS service name such as `S3`
 * `api` is an AWS api method method such as `ListBuckets` or `GetObject`
 * `status` is an HTTP status code returned by API call such as `200` or `500`
 * `exception` is an exception class name such as `Seahorse::Client::NetworkingError`
+
+<hr>
 
 ## Ruby Methods Metrics Collector
 
@@ -149,18 +154,20 @@ end
 2. Attach to methods, each time when any observed method invokes a corresponding counter and a histogram 
    will be updated
    
-A list of collected metrics
+#### Collected metrics
 
-* `counter` `{metrics_prefix}_calls_total(class method status)`<br>
-  is the total number of of successful or failed calls by ruby's method
-* `histogram` `{metrics_prefix}_calls_duration_seconds(class method status)`<br>
-  is the time in seconds which spent at ruby's method calls
-  
-Labels description
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `<metrics_prefix>_calls_total` | counter | `class`<br>`method`<br>`status` | the total number of of successful or failed calls by ruby's method |
+| `<metrics_prefix>_calls_duration_seconds` | histogram | `class`<br>`method`<br>`status` | the time in seconds which spent at ruby's method calls |
+
+#### Labels
 
 * `class` is a ruby class where the module included
 * `method` is an observed ruby's method name 
 * `status` is one of `success` or `failure`
+
+<hr>
 
 # Endpoint Name Roda plugin
 
