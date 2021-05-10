@@ -10,7 +10,7 @@ module BM
     #
     # When included it creates two metrics:
     # * `[metric_prefix]_calls_total` - is a counter
-    # * `[metric_prefix]_calls_duration_seconds` - is a histogram
+    # * `[metric_prefix]_call_duration_seconds` - is a histogram
     #
     # Each metrics labeled with:
     # * `class` - a class name where the module included

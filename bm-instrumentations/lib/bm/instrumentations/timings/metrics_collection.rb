@@ -15,14 +15,14 @@ module BM
       # * `status` - one of `success` or `failure`
       #
       # @attr [Prometheus::Client::Counter] calls_total
-      # @attr [Prometheus::Client::Histogram] calls_duration_seconds
+      # @attr [Prometheus::Client::Histogram] call_duration_seconds
       # @attr [String] class_name
       #
       # @api private
       class MetricsCollection
         include Instrumentations::IfRegistered
 
-        attr_reader :class_name, :calls_total, :calls_duration_seconds
+        attr_reader :class_name, :calls_total, :call_duration_seconds
 
         # @param registry [Prometheus::Client::Registry]
         # @param metrics_prefix [String, Symbol]
@@ -30,7 +30,7 @@ module BM
         def initialize(registry:, metrics_prefix:, class_name:)
           @class_name = class_name
           build_calls_total(registry, metrics_prefix)
-          build_calls_duration_seconds(registry, metrics_prefix)
+          build_call_duration_seconds(registry, metrics_prefix)
         end
 
         # Invokes and then record metrics for an invoked ruby's method
@@ -61,7 +61,7 @@ module BM
             status: status
           }
           calls_total.increment(labels: labels)
-          calls_duration_seconds.observe(stopwatch.to_f, labels: labels)
+          call_duration_seconds.observe(stopwatch.to_f, labels: labels)
         end
 
         # @param registry [Prometheus::Client::Registry]
@@ -81,13 +81,13 @@ module BM
 
         # @param registry [Prometheus::Client::Registry]
         # @param metrics_prefix [String, Symbol]
-        def build_calls_duration_seconds(registry, metrics_prefix)
-          name = "#{metrics_prefix}_calls_duration_seconds".to_sym
+        def build_call_duration_seconds(registry, metrics_prefix)
+          name = "#{metrics_prefix}_call_duration_seconds".to_sym
           if_registered(registry, name) do |counter|
-            return @calls_duration_seconds = counter
+            return @call_duration_seconds = counter
           end
 
-          @calls_duration_seconds = registry.histogram(
+          @call_duration_seconds = registry.histogram(
             name,
             docstring: "The time in seconds which spent at ruby's method calls",
             labels: %i[class method status]

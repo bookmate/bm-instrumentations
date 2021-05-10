@@ -6,12 +6,12 @@ module BM
       # A collection of Prometheus metrics for HTTP server requests and responses
       #
       # @attr [Prometheus::Client::Counter] requests_total
-      # @attr [Prometheus::Client::Histogram] requests_duration_seconds
+      # @attr [Prometheus::Client::Histogram] request_duration_seconds
       # @attr [Prometheus::Client::Counter] exceptions_total
       #
       # @api private
       class MetricsCollection
-        attr_reader :requests_total, :requests_duration_seconds, :exceptions_total
+        attr_reader :requests_total, :request_duration_seconds, :exceptions_total
 
         # A label value when an endpoint's path is unknown
         NONE = 'none'
@@ -22,7 +22,7 @@ module BM
         # @param registry [Prometheus::Client::Registry]
         def initialize(registry)
           build_requests_total(registry)
-          build_requests_duration_seconds(registry)
+          build_request_duration_seconds(registry)
           build_exceptions_total(registry)
         end
 
@@ -40,7 +40,7 @@ module BM
           }
 
           requests_total.increment(labels: labels)
-          requests_duration_seconds.observe(stopwatch.to_f, labels: labels)
+          request_duration_seconds.observe(stopwatch.to_f, labels: labels)
         end
 
         # Record metrics for a failed request (with an exception)
@@ -73,11 +73,11 @@ module BM
         end
 
         # @param registry [Prometheus::Client::Registry]
-        def build_requests_duration_seconds(registry)
-          @requests_duration_seconds = registry.histogram(
-            :http_server_requests_duration_seconds,
+        def build_request_duration_seconds(registry)
+          @request_duration_seconds = registry.histogram(
+            :http_server_request_duration_seconds,
             docstring:
-              'The HTTP response times in seconds from the Rack application',
+              'The HTTP response times in seconds of the Rack application',
             labels: %i[method path status]
           )
         end

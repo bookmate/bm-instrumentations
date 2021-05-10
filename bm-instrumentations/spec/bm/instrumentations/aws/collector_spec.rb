@@ -25,15 +25,15 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
     expect(registry.get(:aws_sdk_client_requests_total)).to be_kind_of(Prometheus::Client::Counter)
     expect(registry.get(:aws_sdk_client_exceptions_total)).to be_kind_of(Prometheus::Client::Counter)
     expect(registry.get(:aws_sdk_client_retries_total)).to be_kind_of(Prometheus::Client::Counter)
-    expect(registry.get(:aws_sdk_client_requests_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
+    expect(registry.get(:aws_sdk_client_request_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
   end
 
   context 'when registered twice' do
     subject(:second_collector) { described_class[registry] }
 
     it 'shares same metrics' do
-      expect(second_collector.metrics_collection.requests_duration_seconds).to \
-        eq(collector.metrics_collection.requests_duration_seconds)
+      expect(second_collector.metrics_collection.request_duration_seconds).to \
+        eq(collector.metrics_collection.request_duration_seconds)
 
       expect(second_collector.metrics_collection.requests_total).to \
         eq(collector.metrics_collection.requests_total)
@@ -52,7 +52,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
     before { s3_client.list_buckets }
 
     it_behaves_like 'increments a counter', :aws_sdk_client_requests_total
-    it_behaves_like 'fills a histogram buckets', :aws_sdk_client_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :aws_sdk_client_request_duration_seconds
     it_behaves_like 'does not increment a counter', :aws_sdk_client_exceptions_total
     it_behaves_like 'does not increment a counter', :aws_sdk_client_retries_total
   end
@@ -66,7 +66,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
     end
 
     it_behaves_like 'increments a counter', :aws_sdk_client_requests_total
-    it_behaves_like 'fills a histogram buckets', :aws_sdk_client_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :aws_sdk_client_request_duration_seconds
     it_behaves_like(
       'increments a counter',
       :aws_sdk_client_exceptions_total,

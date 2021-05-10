@@ -58,7 +58,7 @@ The middleware has some optional parameters:
 |---------|------|--------|-------------|
 | `http_server_requests_total` | counter |  `method`<br>`path`<br>`status` | the total number of HTTP requests handled by the Rack application |
 | `http_server_exceptions_total` | counter | `method`<br>`path`<br>`exception` | the total number of uncaught exceptions raised by the Rack application |
-| `http_server_requests_duration_seconds` | histogram | `method`<br>`path`<br>`status` | the HTTP response times in seconds from the Rack application |
+| `http_server_request_duration_seconds` | histogram | `method`<br>`path`<br>`status` | the HTTP response times in seconds of the Rack application |
 
 #### Labels
 
@@ -86,7 +86,7 @@ db.extension(:prometheus_instrumentation)
 | Metrics | Type | Labels | Description |
 |---------|------|--------|-------------|
 | `sequel_queries_total` | counter | `database`<br>`query`<br>`status` | how many Sequel queries processed, partitioned by status |
-| `sequel_queries_duration_seconds` | histogram | `database`<br>`status`<br>`status` | the duration in seconds that a Sequel queries spent |
+| `sequel_query_duration_seconds` | histogram | `database`<br>`status`<br>`status` | the duration in seconds that a Sequel queries spent |
 
 #### Labels
 
@@ -114,7 +114,7 @@ Aws::S3::Client.new(...)
 | Metrics | Type | Labels | Description |
 |---------|------|--------|-------------|
 | `aws_sdk_client_requests_total` | counter | `service`<br>`api`<br>`status` | the total number of successful or failed API calls from AWS client to AWS services |
-| `aws_sdk_client_requests_duration_seconds` | histogram | `service`<br>`api`<br>`status` | the total time in seconds for the AWS Client to make a call to AWS services |
+| `aws_sdk_client_request_duration_seconds` | histogram | `service`<br>`api`<br>`status` | the total time in seconds for the AWS Client to make a call to AWS services |
 | `aws_sdk_client_retries_total` | counter | `service`<br>`api` | the total number retries of failed API calls from AWS client to AWS services |
 | `aws_sdk_client_exceptions_total` | counter | `service`<br>`api`<br>`exception` | the total number of AWS API calls that fail |
 
@@ -159,7 +159,7 @@ end
 | Metrics | Type | Labels | Description |
 |---------|------|--------|-------------|
 | `<metrics_prefix>_calls_total` | counter | `class`<br>`method`<br>`status` | the total number of of successful or failed calls by ruby's method |
-| `<metrics_prefix>_calls_duration_seconds` | histogram | `class`<br>`method`<br>`status` | the time in seconds which spent at ruby's method calls |
+| `<metrics_prefix>_call_duration_seconds` | histogram | `class`<br>`method`<br>`status` | the time in seconds which spent at ruby's method calls |
 
 #### Labels
 

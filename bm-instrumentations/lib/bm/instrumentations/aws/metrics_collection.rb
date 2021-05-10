@@ -10,13 +10,13 @@ module BM
       # @attr [Prometheus::Client::Counter] requests_total
       # @attr [Prometheus::Client::Counter] exceptions_total
       # @attr [Prometheus::Client::Counter] retries_total
-      # @attr [Prometheus::Client::Histogram] requests_duration_seconds
+      # @attr [Prometheus::Client::Histogram] request_duration_seconds
       #
       # @api private
       class MetricsCollection
         include Instrumentations::IfRegistered
 
-        attr_reader :requests_total, :exceptions_total, :retries_total, :requests_duration_seconds
+        attr_reader :requests_total, :exceptions_total, :retries_total, :request_duration_seconds
 
         # The number of milliseconds in the one second
         MS_IN_SECOND = 1_000.0
@@ -29,7 +29,7 @@ module BM
           build_requests_total(registry)
           build_exceptions_total(registry)
           build_retries_total(registry)
-          build_requests_duration_seconds(registry)
+          build_request_duration_seconds(registry)
         end
 
         # Records a metrics for given API Call
@@ -40,7 +40,7 @@ module BM
           labels = default_labels_for(api_call)
 
           requests_total.increment(labels: labels)
-          requests_duration_seconds.observe(duration, labels: labels)
+          request_duration_seconds.observe(duration, labels: labels)
           increment_exceptions_total(api_call) if api_call.final_aws_exception
           increment_retries_total(api_call) if api_call.attempt_count > 1
         end
@@ -77,13 +77,13 @@ module BM
         end
 
         # @param registry [Prometheus::Client::Registry]
-        def build_requests_duration_seconds(registry)
-          if_registered(registry, :aws_sdk_client_requests_duration_seconds) do |counter|
-            return @requests_duration_seconds = counter
+        def build_request_duration_seconds(registry)
+          if_registered(registry, :aws_sdk_client_request_duration_seconds) do |counter|
+            return @request_duration_seconds = counter
           end
 
-          @requests_duration_seconds = registry.histogram(
-            :aws_sdk_client_requests_duration_seconds,
+          @request_duration_seconds = registry.histogram(
+            :aws_sdk_client_request_duration_seconds,
             docstring:
               'The total time in seconds for the AWS Client to make a call to AWS services',
             labels: %i[service api status]

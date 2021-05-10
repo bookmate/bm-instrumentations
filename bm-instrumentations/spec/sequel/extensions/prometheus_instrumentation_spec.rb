@@ -27,8 +27,8 @@ RSpec.describe 'Sequel::Extensions::PrometheusInstrumentation' do
     after { second_db.disconnect }
 
     it 'shares same metrics' do
-      expect(second_db.metrics_collection.queries_duration_seconds).to \
-        eq(db.metrics_collection.queries_duration_seconds)
+      expect(second_db.metrics_collection.query_duration_seconds).to \
+        eq(db.metrics_collection.query_duration_seconds)
 
       expect(second_db.metrics_collection.queries_total).to \
         eq(db.metrics_collection.queries_total)
@@ -44,7 +44,7 @@ RSpec.describe 'Sequel::Extensions::PrometheusInstrumentation' do
     db
 
     expect(registry.get(:sequel_queries_total)).to be_kind_of(Prometheus::Client::Counter)
-    expect(registry.get(:sequel_queries_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
+    expect(registry.get(:sequel_query_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
   end
 
   describe 'collect metrics' do
@@ -55,7 +55,7 @@ RSpec.describe 'Sequel::Extensions::PrometheusInstrumentation' do
     end
 
     it_behaves_like 'increments a counter', :sequel_queries_total
-    it_behaves_like 'fills a histogram buckets', :sequel_queries_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :sequel_query_duration_seconds
   end
 
   describe 'collect metrics', 'when an exception has raised' do
@@ -66,6 +66,6 @@ RSpec.describe 'Sequel::Extensions::PrometheusInstrumentation' do
     end
 
     it_behaves_like 'increments a counter', :sequel_queries_total
-    it_behaves_like 'fills a histogram buckets', :sequel_queries_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :sequel_query_duration_seconds
   end
 end

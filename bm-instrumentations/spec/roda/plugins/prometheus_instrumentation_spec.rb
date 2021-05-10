@@ -18,6 +18,6 @@ RSpec.describe 'Roda::RodaPlugins::PrometheusInstrumentation', rack: true do
     expect(last_response).to be_ok
     expect(last_response['Content-Type']).to eq('text/plain; version=0.0.4')
     expect(last_response.body).to include("TYPE http_server_requests_total counter\n")
-    expect(last_response.body).to include("TYPE http_server_requests_duration_seconds histogram\n")
+    expect(last_response.body).to include("TYPE http_server_request_duration_seconds histogram\n")
   end
 end

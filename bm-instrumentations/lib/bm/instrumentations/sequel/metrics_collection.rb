@@ -8,13 +8,13 @@ module BM
       # A collection of Prometheus metrics for Sequel database queries
       #
       # @attr [Prometheus::Client::Counter] queries_total
-      # @attr [Prometheus::Client::Histogram] queries_duration_seconds
+      # @attr [Prometheus::Client::Histogram] query_duration_seconds
       #
       # @api private
       class MetricsCollection
         include Instrumentations::IfRegistered
 
-        attr_reader :queries_total, :queries_duration_seconds
+        attr_reader :queries_total, :query_duration_seconds
 
         # A label value when a query or a database are nil
         NONE = 'none'
@@ -22,7 +22,7 @@ module BM
         # @param registry [Prometheus::Client::Registry]
         def initialize(registry)
           build_queries_total(registry)
-          build_queries_duration_seconds(registry)
+          build_query_duration_seconds(registry)
         end
 
         # Record metrics for a database query
@@ -39,19 +39,19 @@ module BM
           }
 
           queries_total.increment(labels: labels)
-          queries_duration_seconds.observe(stopwatch.to_f, labels: labels)
+          query_duration_seconds.observe(stopwatch.to_f, labels: labels)
         end
 
         private
 
         # @param registry [Prometheus::Client::Registry]
-        def build_queries_duration_seconds(registry)
-          if_registered(registry, :sequel_queries_duration_seconds) do |histogram|
-            return @queries_duration_seconds = histogram
+        def build_query_duration_seconds(registry)
+          if_registered(registry, :sequel_query_duration_seconds) do |histogram|
+            return @query_duration_seconds = histogram
           end
 
-          @queries_duration_seconds = registry.histogram(
-            :sequel_queries_duration_seconds,
+          @query_duration_seconds = registry.histogram(
+            :sequel_query_duration_seconds,
             docstring:
               'The duration in seconds that a Sequel query spent',
             labels: %i[database query status]

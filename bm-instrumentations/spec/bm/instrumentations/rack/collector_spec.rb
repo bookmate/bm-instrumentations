@@ -16,7 +16,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
 
     expect(registry.get(:http_server_requests_total)).to be_kind_of(Prometheus::Client::Counter)
     expect(registry.get(:http_server_exceptions_total)).to be_kind_of(Prometheus::Client::Counter)
-    expect(registry.get(:http_server_requests_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
+    expect(registry.get(:http_server_request_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
   end
 
   describe 'collect metrics' do
@@ -30,7 +30,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     end
 
     it_behaves_like 'increments a counter', :http_server_requests_total
-    it_behaves_like 'fills a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
     it_behaves_like 'does not increment a counter', :http_server_exceptions_total
   end
 
@@ -46,7 +46,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     end
 
     it_behaves_like 'increments a counter', :http_server_requests_total
-    it_behaves_like 'fills a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
     it_behaves_like 'does not increment a counter', :http_server_exceptions_total
   end
 
@@ -57,7 +57,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     before { expect { get '/' }.to raise_error('boom') }
 
     it_behaves_like 'increments a counter', :http_server_requests_total
-    it_behaves_like 'fills a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
     it_behaves_like 'increments a counter', :http_server_exceptions_total, \
                     method: 'GET', path: 'none', exception: 'RuntimeError'
   end
@@ -74,7 +74,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     before { get '/' }
 
     it_behaves_like 'increments a counter', :http_server_requests_total
-    it_behaves_like 'fills a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
     it_behaves_like 'does not increment a counter', :http_server_exceptions_total
   end
 
@@ -90,7 +90,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     before { expect { get '/' }.to raise_error('boom') }
 
     it_behaves_like 'increments a counter', :http_server_requests_total
-    it_behaves_like 'fills a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
     it_behaves_like 'increments a counter', :http_server_exceptions_total, \
                     method: 'GET', path: 'endpoint_name', exception: 'RuntimeError'
   end
@@ -105,6 +105,6 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
 
     it_behaves_like 'does not increment a counter', :http_server_requests_total
     it_behaves_like 'does not increment a counter', :http_server_exceptions_total
-    it_behaves_like 'does not fill a histogram buckets', :http_server_requests_duration_seconds
+    it_behaves_like 'does not fill a histogram buckets', :http_server_request_duration_seconds
   end
 end

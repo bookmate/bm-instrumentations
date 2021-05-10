@@ -31,7 +31,7 @@ RSpec.describe BM::Instrumentations::Timings do
   it 'registers metrics in registry' do
     app
     expect(registry.get(:app_test_calls_total)).to be_kind_of(Prometheus::Client::Counter)
-    expect(registry.get(:app_test_calls_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
+    expect(registry.get(:app_test_call_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
   end
 
   context 'when included twice with same prefix' do
@@ -49,8 +49,8 @@ RSpec.describe BM::Instrumentations::Timings do
       expect(second_app.class.timings_instrumentation.calls_total).to \
         eq(app.class.timings_instrumentation.calls_total)
 
-      expect(second_app.class.timings_instrumentation.calls_duration_seconds).to \
-        eq(app.class.timings_instrumentation.calls_duration_seconds)
+      expect(second_app.class.timings_instrumentation.call_duration_seconds).to \
+        eq(app.class.timings_instrumentation.call_duration_seconds)
     end
   end
 
@@ -60,7 +60,7 @@ RSpec.describe BM::Instrumentations::Timings do
     before { expect(app.foo(1, second: 'bar')).to eq('bar') }
 
     it_behaves_like 'increments a counter', :app_test_calls_total
-    it_behaves_like 'fills a histogram buckets', :app_test_calls_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :app_test_call_duration_seconds
   end
 
   describe 'collect metrics', 'with an exception' do
@@ -69,6 +69,6 @@ RSpec.describe BM::Instrumentations::Timings do
     before { expect { app.fails { 'boom' } }.to raise_error('boom') }
 
     it_behaves_like 'increments a counter', :app_test_calls_total
-    it_behaves_like 'fills a histogram buckets', :app_test_calls_duration_seconds
+    it_behaves_like 'fills a histogram buckets', :app_test_call_duration_seconds
   end
 end
