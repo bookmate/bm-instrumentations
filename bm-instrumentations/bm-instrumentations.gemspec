@@ -38,24 +38,4 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'prometheus-client', '~> 2.1'
-
-  spec.add_development_dependency 'bundler', '~> 2.1'
-  spec.add_development_dependency 'rake', '~> 11.2'
-  spec.add_development_dependency 'rspec', '~> 3.10'
-
-  spec.add_development_dependency 'rubocop', '= 1.14.0'
-  spec.add_development_dependency 'rubocop-checkstyle_formatter', '= 0.4.0'
-  spec.add_development_dependency 'rubocop-performance', '= 1.11.3'
-  spec.add_development_dependency 'rubocop-rake', '= 0.5.1'
-  spec.add_development_dependency 'rubocop-rspec', '= 2.3.0'
-
-  spec.add_development_dependency 'rspec_junit_formatter', '= 0.4.1'
-  spec.add_development_dependency 'simplecov', '= 0.21.2'
-
-  spec.add_development_dependency 'aws-sdk-s3', '~> 1.94' # aws
-  spec.add_development_dependency 'mysql2', '~> 0.5' # sequel
-  spec.add_development_dependency 'rack', '~> 2.2' # rack
-  spec.add_development_dependency 'rack-test', '~> 1.1' # rack
-  spec.add_development_dependency 'roda', '~> 3.43' # roda
-  spec.add_development_dependency 'sequel', '~> 5.44' # sequel
 end
