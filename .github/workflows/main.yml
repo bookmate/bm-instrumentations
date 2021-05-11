@@ -40,11 +40,11 @@ jobs:
           bin/wait-for-it.sh $DB_HOST -t 15
           bin/wait-for-it.sh $S3_HOST -t 15
 
-      - name: Setup Ruby
+      - name: Setup ruby
         uses: ruby/setup-ruby@v1
         with: { ruby-version: '${{ matrix.ruby }}' }
 
-      - name: Setup Project
+      - name: Setup project
         run: bin/setup
 
       - name: Run Tests
@@ -52,7 +52,7 @@ jobs:
         run: |
           bin/rake ci
 
-      - name: Run Tests & Report to CodeClimate
+      - name: Run tests & peport to CodeClimate
         if: matrix.ruby == 2.7
         uses: paambaati/codeclimate-action@v2.7.5
         env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
