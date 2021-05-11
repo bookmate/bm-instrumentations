@@ -33,7 +33,7 @@ jobs:
         ruby: ['2.7', '3.0']
 
     env:
-      S3_HOST: 'localhost:9000'
+      S3_HOST: '127.0.0.1:9000'
       DB_HOST: '127.0.0.1:3306'
 
     steps:
