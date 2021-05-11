@@ -48,6 +48,7 @@ jobs:
         run: bin/setup
 
       - name: Run Tests
+        if: matrix.ruby != 2.7
         run: |
           bin/rake ci
 
