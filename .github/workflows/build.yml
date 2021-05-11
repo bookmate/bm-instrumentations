@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      minio:
+        image: 'bitnami/minio:latest'
+        ports: [ '9000:9000' ]
+        env:
+          MINIO_ACCESS_KEY: "AccessKey"
+          MINIO_SECRET_KEY: "SecretKey"
+      mysql:
+        image: 'mariadb'
+        ports: [ '3306:3306' ]
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+
+    strategy:
+      matrix:
+        ruby: [ '2.7', '3.0' ]
+
+    env:
+      SIMPLECOV: '1'
+      S3_HOST: "localhost:9000"
+      DB_HOST: "127.0.0.1:3306"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Wait service ports
+        run: |
+          bin/wait-for-it.sh $DB_HOST -t 15
+          bin/wait-for-it.sh $S3_HOST -t 15
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with: { ruby-version: '${{ matrix.ruby }}' }
+
+      - name: Setup Project
+        run: bin/setup
+
+      - name: Run Tests
+        if: matrix.ruby != 2.7
+        run: |
+          bin/rake ci
+
+      - name: Run Tests & Report to CodeClimate
+        if: matrix.ruby == 2.7
+        uses: paambaati/codeclimate-action@v2.7.5
+        env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
+        with: { coverageCommand: 'bin/rake ci' }
