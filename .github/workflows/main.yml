@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      minio:
+        image: 'minio/minio'
+        ports: ['9000:9000']
+        env:
+          MINIO_ACCESS_KEY: "AccessKey"
+          MINIO_SECRET_KEY: "SecretKey"
+      mysql:
+        image: 'mariadb'
+        ports: ['3306:3306']
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Setup project
+        run: bin/setup
+      - name: Run tests
+        run: bin/rake ci
