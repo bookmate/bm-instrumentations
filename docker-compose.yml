@@ -11,7 +11,7 @@ services:
       - mysql-data:/var/lib/mysql:delegated
 
   minio:
-    image: "minio/minio"
+    image: "bitnami/minio:latest"
     command: "server /var/lib/minio"
     environment:
       MINIO_ACCESS_KEY: "AccessKey"
