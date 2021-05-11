@@ -47,16 +47,11 @@ jobs:
       - name: Setup Project
         run: bin/setup
 
-      - name: Setup CodeClimate
-        run: |
-          curl -s --fail -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
-          chmod +x bin/cc-test-reporter
-          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA bin/cc-test-reporter before-build
-
       - name: Run tests
-        run: bin/rake ci
-
-      - name: Publish to CodeClimate
+        uses: paambaati/codeclimate-action@v2.7.5
         env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
-        run: |
-          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA bin/cc-test-reporter after-build -t simplecov --exit-code $?
+        with:
+          coverageCommand: bin/rake ci
+          coverageLocations: |
+            coverage/.resultset.json:simplecov
+          debug: true
