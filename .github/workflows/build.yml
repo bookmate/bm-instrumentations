@@ -50,7 +50,7 @@ jobs:
         run: |
           curl --fail -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
           chmod +x bin/cc-test-reporter
-          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA ./cc-test-reporter before-build
+          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA bin/cc-test-reporter before-build
 
       - name: Run tests
         run: bin/rake ci
