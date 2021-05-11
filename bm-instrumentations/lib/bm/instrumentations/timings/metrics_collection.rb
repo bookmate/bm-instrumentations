@@ -33,7 +33,7 @@ module BM
         # Invokes and then record metrics for an invoked ruby's method
         #
         # @example
-        #   metrics_collection.observe { long_running_job }
+        #   metrics_collection.observe(:long_running_job) { long_running_job }
         #
         # @param method [Symbol]
         def observe(method)
