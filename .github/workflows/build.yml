@@ -13,7 +13,7 @@ jobs:
     services:
       minio:
         image: 'minio/minio'
-        ports: ['9000:9000']
+        ports: ['9000']
         env:
           MINIO_ACCESS_KEY: "AccessKey"
           MINIO_SECRET_KEY: "SecretKey"
@@ -28,8 +28,8 @@ jobs:
         ruby: ['2.7', '3.0']
 
     env:
-      S3_HOST: '127.0.0.1:9000'
-      DB_HOST: '127.0.0.1:3306'
+      S3_HOST: '127.0.0.1:${{ job.services.minio.ports[9000] }}'
+      DB_HOST: '127.0.0.1:${{ job.services.mysql.ports[3306] }}'
 
     steps:
       - uses: actions/checkout@v2
