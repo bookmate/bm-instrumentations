@@ -13,19 +13,21 @@ jobs:
     services:
       minio:
         image: 'minio/minio'
-        ports: ['9000:9000']
         env:
           MINIO_ACCESS_KEY: "AccessKey"
           MINIO_SECRET_KEY: "SecretKey"
       mysql:
         image: 'mariadb'
-        ports: ['3306:3306']
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
 
     strategy:
       matrix:
-        ruby: [2.7, '3.0']
+        ruby: ['2.7', '3.0']
+
+    env:
+      S3_HOST: 'minio:9000'
+      DB_HOST: 'mysql:3306'
 
     steps:
       - uses: actions/checkout@v2

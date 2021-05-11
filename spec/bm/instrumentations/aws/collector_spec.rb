@@ -6,14 +6,14 @@ require 'bm/instrumentations'
 RSpec.describe BM::Instrumentations::Aws::Collector do
   subject(:collector) { described_class[registry] }
 
-  let(:endpoint) { ENV.fetch('S3_ENDPOINT', 'http://localhost:9000') }
   let(:access_key_id) { ENV.fetch('AWS_ACCESS_KEY_ID', 'AccessKey') }
   let(:secret_key) { ENV.fetch('AWS_SECRET_KEY', 'SecretKey') }
+  let(:s3_host) { ENV.fetch('S3_HOST', 'localhost:9000') }
   let(:s3_client) do
     Aws::S3::Client.add_plugin(collector)
     Aws::S3::Client.new(
       credentials: Aws::Credentials.new(access_key_id, secret_key),
-      endpoint: endpoint,
+      endpoint: "http://#{s3_host}",
       force_path_style: true,
       region: 'us-east-1'
     )
@@ -59,7 +59,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
 
   describe 'collect metrics', 'when an exception has raised' do
     let(:labels) { { status: 500, service: 'S3', api: 'ListBuckets' } }
-    let(:endpoint) { non_listening_endpoint }
+    let(:s3_host) { non_listening_endpoint }
 
     before do
       expect { s3_client.list_buckets }.to raise_error(Seahorse::Client::NetworkingError)
@@ -82,7 +82,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
   def non_listening_endpoint
     require 'socket'
     server = TCPServer.new('127.0.0.1', 0)
-    "http://#{server.addr[2]}:#{server.addr[1]}"
+    "#{server.addr[2]}:#{server.addr[1]}"
   ensure
     server&.close
   end

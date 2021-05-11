@@ -5,20 +5,21 @@ require 'uri'
 
 RSpec.describe 'Sequel::Extensions::PrometheusInstrumentation' do
   subject(:db) do
-    Sequel.connect(database_url).tap do |db|
+    Sequel.connect(db_url).tap do |db|
       db.extension(:prometheus_instrumentation)
       db.prometheus_registry = registry
     end
   end
 
-  let(:database_url) { ENV.fetch('DATABASE_URL', 'mysql2://root@127.0.0.1:3306/mysql') }
-  let(:db_name) { URI(database_url).path[1..] }
+  let(:db_host) { ENV.fetch('DB_HOST', '127.0.0.1:3306') }
+  let(:db_url) { ENV.fetch('DB_URL', "mysql2://root@#{db_host}/mysql") }
+  let(:db_name) { URI(db_url).path[1..] }
 
   after { db.disconnect }
 
   context 'when registered twice' do
     subject(:second_db) do
-      Sequel.connect(database_url).tap do |db|
+      Sequel.connect(db_url).tap do |db|
         db.extension(:prometheus_instrumentation)
         db.prometheus_registry = registry
       end
