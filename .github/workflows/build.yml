@@ -47,7 +47,12 @@ jobs:
       - name: Setup Project
         run: bin/setup
 
-      - name: Run tests
+      - name: Run Tests
+        run: |
+          bin/rake ci
+
+      - name: Run Tests & Report to CodeClimate
+        if: matrix.ruby == 2.7
         uses: paambaati/codeclimate-action@v2.7.5
         env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
         with:
