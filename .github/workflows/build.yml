@@ -22,17 +22,27 @@ jobs:
         ports: ['3306:3306']
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     strategy:
       matrix:
         ruby: ['2.7', '3.0']
 
     env:
-      S3_HOST: 'minio:9000'
-      DB_HOST: 'mysql:3306'
+      S3_HOST: 'localhost:9000'
+      DB_HOST: '127.0.0.1:3306'
 
     steps:
       - uses: actions/checkout@v2
+      - name: Wait service ports
+        run: |
+          npm install -g wait-port
+          wait-port -t 15 localhost:9000
+          wait-port -t 15 localhost:3306
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with: { ruby-version: '${{ matrix.ruby }}' }
