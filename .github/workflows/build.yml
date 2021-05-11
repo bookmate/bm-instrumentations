@@ -44,12 +44,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with: { ruby-version: '${{ matrix.ruby }}' }
 
-      - name: Setup project
+      - name: Setup Project
         run: bin/setup
 
       - name: Setup CodeClimate
         run: |
-          curl --fail -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
+          curl -s --fail -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
           chmod +x bin/cc-test-reporter
           GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA bin/cc-test-reporter before-build
 
