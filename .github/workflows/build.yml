@@ -23,11 +23,15 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
 
+    strategy:
+      matrix:
+        ruby: [2.7, '3.0']
+
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
-        with: { ruby-version: 2.7 }
+        with: { ruby-version: '${{ matrix.ruby }}' }
       - name: Setup project
         run: bin/setup
       - name: Run tests
