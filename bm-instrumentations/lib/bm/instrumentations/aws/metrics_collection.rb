@@ -12,7 +12,7 @@ module BM
       #
       # @api private
       class MetricsCollection
-        include Instrumentations::IfRegistered
+        include Instrumentations::RegisterMetric
 
         attr_reader :requests_total, :exceptions_total, :retries_total, :request_duration_seconds
 
@@ -76,58 +76,50 @@ module BM
 
         # @param registry [Prometheus::Client::Registry]
         def build_request_duration_seconds(registry)
-          if_registered(registry, :aws_sdk_client_request_duration_seconds) do |counter|
-            return @request_duration_seconds = counter
+          @request_duration_seconds = register_metric(registry, :aws_sdk_client_request_duration_seconds) do |name|
+            registry.histogram(
+              name,
+              docstring:
+                'The total time in seconds for the AWS Client to make a call to AWS services',
+              labels: %i[service api status]
+            )
           end
-
-          @request_duration_seconds = registry.histogram(
-            :aws_sdk_client_request_duration_seconds,
-            docstring:
-              'The total time in seconds for the AWS Client to make a call to AWS services',
-            labels: %i[service api status]
-          )
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_requests_total(registry)
-          if_registered(registry, :aws_sdk_client_requests_total) do |histogram|
-            return @requests_total = histogram
+          @requests_total = register_metric(registry, :aws_sdk_client_requests_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'The total number of successful or failed API calls from AWS client to AWS services',
+              labels: %i[service api status]
+            )
           end
-
-          @requests_total = registry.counter(
-            :aws_sdk_client_requests_total,
-            docstring:
-              'The total number of successful or failed API calls from AWS client to AWS services',
-            labels: %i[service api status]
-          )
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_retries_total(registry)
-          if_registered(registry, :aws_sdk_client_retries_total) do |histogram|
-            return @retries_total = histogram
+          @retries_total = register_metric(registry, :aws_sdk_client_retries_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'The total number retries of failed API calls from AWS client to AWS services',
+              labels: %i[service api]
+            )
           end
-
-          @retries_total = registry.counter(
-            :aws_sdk_client_retries_total,
-            docstring:
-              'The total number retries of failed API calls from AWS client to AWS services',
-            labels: %i[service api]
-          )
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_exceptions_total(registry)
-          if_registered(registry, :aws_sdk_client_exceptions_total) do |histogram|
-            return @exceptions_total = histogram
+          @exceptions_total = register_metric(registry, :aws_sdk_client_exceptions_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'The total number of AWS API calls that fail',
+              labels: %i[service api exception]
+            )
           end
-
-          @exceptions_total = registry.counter(
-            :aws_sdk_client_exceptions_total,
-            docstring:
-              'The total number of AWS API calls that fail',
-            labels: %i[service api exception]
-          )
         end
       end
     end

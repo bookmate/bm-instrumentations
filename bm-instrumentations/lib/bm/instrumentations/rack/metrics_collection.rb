@@ -11,6 +11,8 @@ module BM
       #
       # @api private
       class MetricsCollection
+        include Instrumentations::RegisterMetric
+
         attr_reader :requests_total, :request_duration_seconds, :exceptions_total
 
         # A label value when an endpoint's path is unknown
@@ -64,32 +66,38 @@ module BM
 
         # @param registry [Prometheus::Client::Registry]
         def build_exceptions_total(registry)
-          @exceptions_total = registry.counter(
-            :http_server_exceptions_total,
-            docstring:
-              'The total number of uncaught exceptions raised by the Rack application',
-            labels: %i[method path exception]
-          )
+          @exceptions_total = register_metric(registry, :http_server_exceptions_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'The total number of uncaught exceptions raised by the Rack application',
+              labels: %i[method path exception]
+            )
+          end
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_request_duration_seconds(registry)
-          @request_duration_seconds = registry.histogram(
-            :http_server_request_duration_seconds,
-            docstring:
-              'The HTTP response times in seconds of the Rack application',
-            labels: %i[method path status]
-          )
+          @request_duration_seconds = register_metric(registry, :http_server_request_duration_seconds) do |name|
+            registry.histogram(
+              name,
+              docstring:
+                'The HTTP response times in seconds of the Rack application',
+              labels: %i[method path status]
+            )
+          end
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_requests_total(registry)
-          @requests_total = registry.counter(
-            :http_server_requests_total,
-            docstring:
-              'The total number of HTTP requests handled by the Rack application',
-            labels: %i[method path status]
-          )
+          @requests_total = register_metric(registry, :http_server_requests_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'The total number of HTTP requests handled by the Rack application',
+              labels: %i[method path status]
+            )
+          end
         end
       end
     end

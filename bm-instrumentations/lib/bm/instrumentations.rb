@@ -5,9 +5,9 @@ require 'bm/instrumentations/version'
 module BM
   # :nodoc:
   module Instrumentations
-    autoload :IfRegistered, 'bm/instrumentations/internal/if_registered'
-    autoload :Stopwatch,    'bm/instrumentations/internal/stopwatch'
-    autoload :Timings,      'bm/instrumentations/timings'
+    autoload :RegisterMetric, 'bm/instrumentations/internal/register_metric'
+    autoload :Stopwatch,      'bm/instrumentations/internal/stopwatch'
+    autoload :Timings,        'bm/instrumentations/timings'
 
     module Aws
       autoload :Collector,         'bm/instrumentations/aws/collector'

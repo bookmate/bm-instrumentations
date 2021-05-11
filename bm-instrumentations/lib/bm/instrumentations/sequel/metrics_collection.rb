@@ -10,7 +10,7 @@ module BM
       #
       # @api private
       class MetricsCollection
-        include Instrumentations::IfRegistered
+        include Instrumentations::RegisterMetric
 
         attr_reader :queries_total, :query_duration_seconds
 
@@ -44,30 +44,26 @@ module BM
 
         # @param registry [Prometheus::Client::Registry]
         def build_query_duration_seconds(registry)
-          if_registered(registry, :sequel_query_duration_seconds) do |histogram|
-            return @query_duration_seconds = histogram
+          @query_duration_seconds = register_metric(registry, :sequel_query_duration_seconds) do |name|
+            registry.histogram(
+              name,
+              docstring:
+                'The duration in seconds that a Sequel query spent',
+              labels: %i[database query status]
+            )
           end
-
-          @query_duration_seconds = registry.histogram(
-            :sequel_query_duration_seconds,
-            docstring:
-              'The duration in seconds that a Sequel query spent',
-            labels: %i[database query status]
-          )
         end
 
         # @param registry [Prometheus::Client::Registry]
         def build_queries_total(registry)
-          if_registered(registry, :sequel_queries_total) do |counter|
-            return @queries_total = counter
+          @queries_total = register_metric(registry, :sequel_queries_total) do |name|
+            registry.counter(
+              name,
+              docstring:
+                'How many Sequel queries processed, partitioned by status',
+              labels: %i[database query status]
+            )
           end
-
-          @queries_total = registry.counter(
-            :sequel_queries_total,
-            docstring:
-              'How many Sequel queries processed, partitioned by status',
-            labels: %i[database query status]
-          )
         end
       end
     end

@@ -19,6 +19,21 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
     expect(registry.get(:http_server_request_duration_seconds)).to be_kind_of(Prometheus::Client::Histogram)
   end
 
+  context 'when registered twice' do
+    subject(:second_app) { described_class.new(callable, registry: registry) }
+
+    it 'shares same metrics' do
+      expect(second_app.metrics_collection.request_duration_seconds).to \
+        eq(app.metrics_collection.request_duration_seconds)
+
+      expect(second_app.metrics_collection.requests_total).to \
+        eq(app.metrics_collection.requests_total)
+
+      expect(second_app.metrics_collection.exceptions_total).to \
+        eq(app.metrics_collection.exceptions_total)
+    end
+  end
+
   describe 'collect metrics' do
     let(:labels) { { status: 200, method: 'GET', path: 'none' } }
 

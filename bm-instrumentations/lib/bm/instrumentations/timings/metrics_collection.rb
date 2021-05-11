@@ -17,7 +17,7 @@ module BM
       #
       # @api private
       class MetricsCollection
-        include Instrumentations::IfRegistered
+        include Instrumentations::RegisterMetric
 
         attr_reader :class_name, :calls_total, :call_duration_seconds
 
@@ -65,30 +65,28 @@ module BM
         # @param metrics_prefix [String, Symbol]
         def build_calls_total(registry, metrics_prefix)
           name = "#{metrics_prefix}_calls_total".to_sym
-          if_registered(registry, name) do |counter|
-            return @calls_total = counter
-          end
 
-          @calls_total = registry.counter(
-            name,
-            docstring: "The total number of of successful or failed calls by ruby's method",
-            labels: %i[class method status]
-          )
+          @calls_total = register_metric(registry, name) do |_|
+            registry.counter(
+              name,
+              docstring: "The total number of of successful or failed calls by ruby's method",
+              labels: %i[class method status]
+            )
+          end
         end
 
         # @param registry [Prometheus::Client::Registry]
         # @param metrics_prefix [String, Symbol]
         def build_call_duration_seconds(registry, metrics_prefix)
           name = "#{metrics_prefix}_call_duration_seconds".to_sym
-          if_registered(registry, name) do |counter|
-            return @call_duration_seconds = counter
-          end
 
-          @call_duration_seconds = registry.histogram(
-            name,
-            docstring: "The time in seconds which spent at ruby's method calls",
-            labels: %i[class method status]
-          )
+          @call_duration_seconds = register_metric(registry, name) do |_|
+            registry.histogram(
+              name,
+              docstring: "The time in seconds which spent at ruby's method calls",
+              labels: %i[class method status]
+            )
+          end
         end
       end
     end
