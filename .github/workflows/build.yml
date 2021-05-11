@@ -13,19 +13,19 @@ jobs:
     services:
       minio:
         image: 'bitnami/minio:latest'
-        ports: ['9000:9000']
+        ports: [ '9000:9000' ]
         env:
           MINIO_ACCESS_KEY: "AccessKey"
           MINIO_SECRET_KEY: "SecretKey"
       mysql:
         image: 'mariadb'
-        ports: ['3306:3306']
+        ports: [ '3306:3306' ]
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
 
     strategy:
       matrix:
-        ruby: ['2.7', '3.0']
+        ruby: [ '2.7', '3.0' ]
 
     env:
       S3_HOST: "localhost:9000"
@@ -33,17 +33,29 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Wait service ports
         run: |
           bin/wait-for-it.sh $DB_HOST -t 15
           bin/wait-for-it.sh $S3_HOST -t 15
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with: { ruby-version: '${{ matrix.ruby }}' }
+
       - name: Setup project
         run: bin/setup
+
+      - name: Setup CodeClimate
+        run: |
+          curl --fail -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
+          chmod +x bin/cc-test-reporter
+          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA ./cc-test-reporter before-build
+
       - name: Run tests
         run: bin/rake ci
-      - name: Publish Coverage
-        uses: paambaati/codeclimate-action@v2.7.5
+
+      - name: Publish to CodeClimate
         env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
+        run: |
+          GIT_BRANCH=$GITHUB_REF GIT_COMMIT_SHA=$GITHUB_SHA bin/cc-test-reporter after-build -t simplecov --exit-code $?
