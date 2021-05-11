@@ -28,7 +28,6 @@ jobs:
         ruby: [ '2.7', '3.0' ]
 
     env:
-      SIMPLECOV: '1'
       S3_HOST: "localhost:9000"
       DB_HOST: "127.0.0.1:3306"
 
@@ -47,13 +46,14 @@ jobs:
       - name: Setup project
         run: bin/setup
 
-      - name: Run Tests
+      - name: Run tests
         if: matrix.ruby != 2.7
-        run: |
-          bin/rake ci
+        run: bin/rake ci
 
       - name: Run tests & report to CodeClimate
         if: matrix.ruby == 2.7
         uses: paambaati/codeclimate-action@v2.7.5
-        env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
         with: { coverageCommand: 'bin/rake ci' }
+        env:
+          SIMPLECOV: '1'
+          CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}'
