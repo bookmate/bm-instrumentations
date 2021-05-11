@@ -13,11 +13,13 @@ jobs:
     services:
       minio:
         image: 'minio/minio'
+        ports: ['9000:9000']
         env:
           MINIO_ACCESS_KEY: "AccessKey"
           MINIO_SECRET_KEY: "SecretKey"
       mysql:
         image: 'mariadb'
+        ports: ['3306:3306']
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
 
