@@ -35,8 +35,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Wait service ports
         run: |
-          bin/wait-for-it.sh $S3_HOST -t 30
-          bin/wait-for-it.sh $DB_HOST -t 30
+          bin/wait-for-it.sh $DB_HOST -t 15 -- /bin/true
+          bin/wait-for-it.sh $S3_HOST -t 15 -- /bin/true
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with: { ruby-version: '${{ matrix.ruby }}' }
