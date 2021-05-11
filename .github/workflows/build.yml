@@ -44,3 +44,6 @@ jobs:
         run: bin/setup
       - name: Run tests
         run: bin/rake ci
+      - name: Publish Coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env: { CC_TEST_REPORTER_ID: '${{ secrets.CC_TEST_REPORTER_ID }}' }
