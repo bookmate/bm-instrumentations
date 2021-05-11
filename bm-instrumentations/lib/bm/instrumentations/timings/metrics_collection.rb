@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../internal/stopwatch'
-require_relative '../internal/if_registered'
-
 module BM
   module Instrumentations
     class Timings < Module

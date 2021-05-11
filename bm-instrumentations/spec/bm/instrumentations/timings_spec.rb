@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bm/instrumentations/timings'
+require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations::Timings do
   let(:app) do

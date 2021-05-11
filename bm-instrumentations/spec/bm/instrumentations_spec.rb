@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bm/instrumentations/version'
+require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations do
   it 'has VERSION' do

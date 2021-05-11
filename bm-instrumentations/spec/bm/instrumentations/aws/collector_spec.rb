@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'aws-sdk-s3'
-require 'bm/instrumentations/aws/collector'
+require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations::Aws::Collector do
   subject(:collector) { described_class[registry] }

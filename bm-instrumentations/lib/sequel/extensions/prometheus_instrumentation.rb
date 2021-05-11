@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
+require 'bm/instrumentations'
 require 'prometheus/client'
-
-require 'bm/instrumentations/internal/stopwatch'
-require 'bm/instrumentations/sequel/metrics_collection'
 
 # :nodoc:
 module Sequel

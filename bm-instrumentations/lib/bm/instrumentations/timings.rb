@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'prometheus/client'
+
 require_relative 'timings/metrics_collection'
 
 module BM

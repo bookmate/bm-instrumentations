@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../internal/if_registered'
-
 module BM
   module Instrumentations
     module Sequel

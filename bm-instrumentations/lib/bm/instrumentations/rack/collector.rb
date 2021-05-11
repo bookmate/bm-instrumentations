@@ -3,10 +3,6 @@
 require 'rack'
 require 'prometheus/client'
 
-require_relative '../internal/stopwatch'
-require_relative 'endpoint'
-require_relative 'metrics_collection'
-
 module BM
   module Instrumentations
     module Rack

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
+require 'bm/instrumentations'
 require 'prometheus/middleware/exporter'
-require 'bm/instrumentations/rack/collector'
 
 class Roda
   # :nodoc:

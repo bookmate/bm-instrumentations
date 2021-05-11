@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bm/instrumentations/rack/collector'
+require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   subject(:app) do

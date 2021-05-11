@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'prometheus/client'
-require_relative 'metrics_collection'
 
 module BM
   module Instrumentations

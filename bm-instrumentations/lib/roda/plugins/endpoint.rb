@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bm/instrumentations/rack/endpoint'
+require 'bm/instrumentations'
 
 class Roda
   # :nodoc:

@@ -41,7 +41,7 @@ responses.
 
 ```ruby
 # config.ru
-require 'bm/instrumentations/rack/collector'
+require 'bm/instrumentations'
 use BM::Instrumentations::Rack::Collector, exclude_path: %w[/metrics /ping]
 ```
 
@@ -102,7 +102,7 @@ db.extension(:prometheus_instrumentation)
 Prometheus.
 
 ```ruby
-require 'bm/instrumentations/aws/collector'
+require 'bm/instrumentations'
 
 # Apply a plugin
 Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
@@ -133,7 +133,7 @@ Aws::S3::Client.new(...)
 invocations.
 
 ```ruby
-require 'bm/instrumentations/timings'
+require 'bm/instrumentations'
 
 class QueryUsers
   include BM::Instrumentations::Timings[:user_queries] (1)

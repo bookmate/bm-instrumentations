@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'roda'
-require 'bm/instrumentations/rack/endpoint'
+require 'bm/instrumentations'
 
 RSpec.describe 'Roda::RodaPlugins::Endpoint', rack: true do
   let(:print_endpoint) do
