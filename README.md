@@ -1,3 +1,7 @@
+![Github Actions](https://github.com/bookmate/bm-instrumentations/actions/workflows/build.yml/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f7feeac604065b715a89/maintainability)](https://codeclimate.com/repos/609a9cecd3b4d7010f00334d/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f7feeac604065b715a89/test_coverage)](https://codeclimate.com/repos/609a9cecd3b4d7010f00334d/test_coverage)
+
 # Bm::Instrumentations
 
 Provides Prometheus metrics collectors and integrations for Sequel,
