@@ -47,6 +47,8 @@ RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
       expect(response).to be_ok.have_content_type('text/plain; version=0.0.4')
       expect(response).to have_body("# TYPE tests_total counter\n# HELP tests_total Testing\ntests_total 1.0\n")
     end
+
+    it_behaves_like 'when non GET request'
   end
 
   describe 'a /gc-stats endpoint' do

@@ -4,17 +4,16 @@ require 'rack'
 require 'logger'
 require 'puma'
 require 'prometheus/client'
-require 'prometheus/middleware/exporter'
 
 module BM
   module Instrumentations
     module Management
-      # A management server that serves internal endpoints such as `/ping` or `/metrics` using
-      # a HTTP server on dedicated address.
+      # The `management_server` plugin provides monitoring and metrics on different HTTP port, it starts a separated
+      # {Puma::Server} that serves requests.
       #
       # The server exposes few endpoints:
       # * `/ping` - a liveness probe, always return `HTTP 200 OK` when the server is running
-      # * `/metrics` - metrics from Prometheus exporter
+      # * `/metrics` - metrics list from the current Prometheus registry
       # * `/gc-status` - print ruby GC statistics as JSON
       # * `/threads` - print running threads, names and backtraces as JSON
       #
@@ -52,8 +51,7 @@ module BM
         end
         private_class_method :new
 
-        # Creates a management server backed by {Puma::Server} then bind and
-        # listen to.
+        # Creates the management server backed by {Puma::Server} then bind and listen to.
         #
         # @param port [Integer] is a port number that a server will listen to (default: `9990`)
         # @param host [String] is a bind address that a server uses for listening (default: `0.0.0.0`)
@@ -114,9 +112,7 @@ module BM
         #
         # @return [#call] a frozen rack application
         def rack_app
-          ::Rack::ShowExceptions.new(
-            ::Prometheus::Middleware::Exporter.new(ServeEndpoints.new, registry: registry)
-          ).tap(&:freeze)
+          ::Rack::ShowExceptions.new(ServeEndpoints.new(registry)).freeze
         end
 
         # Handles a running server instance
@@ -146,14 +142,21 @@ module BM
           end
         end
 
-        # Handles management requests such as /ping or /threads
+        # Handles management requests such as `/ping` or `/metrics`
         #
         # @api private
         class ServeEndpoints
           JSON_TEXT = { 'Content-Type' => 'application/json' }.freeze
           PLAIN_TEXT = { 'Content-Type' => 'text/plain' }.freeze
+          METRICS_TEXT = { 'Content-Type' => Prometheus::Client::Formats::Text::CONTENT_TYPE }.freeze
+
           PONG = [200, PLAIN_TEXT, ['pong']].freeze
           NOT_FOUND = [404, PLAIN_TEXT, ['not found']].freeze
+
+          # @param registry [Prometheus::Client::Registry]
+          def initialize(registry)
+            @registry = registry
+          end
 
           # @param env [Hash<String, Any>]
           # @return [(Integer, Hash<String, String>, Array<String>)]
@@ -163,6 +166,8 @@ module BM
             case env[::Rack::PATH_INFO]
             when '/ping'
               PONG
+            when '/metrics'
+              metrics
             when '/gc-stats'
               to_json(GC.stat)
             when '/threads'
@@ -173,6 +178,12 @@ module BM
           end
 
           private
+
+          # @return [(Integer, Hash<String, String>, Array<String>)]
+          def metrics
+            text = Prometheus::Client::Formats::Text.marshal(@registry)
+            [200, METRICS_TEXT, [text]]
+          end
 
           # Returns a list of thread name and its backlog
           #

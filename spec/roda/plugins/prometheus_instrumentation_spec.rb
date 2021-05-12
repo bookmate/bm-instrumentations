@@ -12,12 +12,12 @@ RSpec.describe 'Roda::RodaPlugins::PrometheusInstrumentation', rack: true do
     cls.app.freeze
   end
 
-  it 'responds to /metrics' do
-    get '/metrics'
+  it 'collects metrics' do
+    expect { get '/' }.to change { requests_total }.by(1)
+  end
 
-    expect(last_response).to be_ok
-    expect(last_response['Content-Type']).to eq('text/plain; version=0.0.4')
-    expect(last_response.body).to include("TYPE http_server_requests_total counter\n")
-    expect(last_response.body).to include("TYPE http_server_request_duration_seconds histogram\n")
+  # @return [Integer]
+  def requests_total
+    registry.get(:http_server_requests_total)&.values&.size || 0
   end
 end

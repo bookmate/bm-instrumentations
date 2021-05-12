@@ -6,11 +6,7 @@ require 'prometheus/middleware/exporter'
 class Roda
   # :nodoc:
   module RodaPlugins
-    # The `prometheus_instrumentation` plugin adds the Prometheus exporter and the collector to the application.
-    #
-    # This is a meta plugins which does nothing except adding (and optionally configuring) two middlewares:
-    # * [BM::Instrumentations::Rack::Collector]
-    # * [Prometheus::Middleware::Exporter]
+    # The `prometheus_instrumentation` plugin just add {Rack::Collector} to the current Roda application.
     #
     # @example Apply plugin
     #   class API < Roda
@@ -25,9 +21,8 @@ class Roda
       # @param app [Any]
       # @param registry [Prometheus::Client::Registry, nil] override the default registry
       # @param exclude_path [String, Array<String>, nil] override the default (/metrics) exclude path
-      def self.configure(app, registry: nil, exclude_path: %w[/metrics])
+      def self.configure(app, registry: nil, exclude_path: nil)
         app.use ::BM::Instrumentations::Rack::Collector, registry: registry, exclude_path: exclude_path
-        app.use ::Prometheus::Middleware::Exporter, registry: registry
       end
     end
 
