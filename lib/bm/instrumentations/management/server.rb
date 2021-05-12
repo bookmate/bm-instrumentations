@@ -13,8 +13,9 @@ module BM
       # @attr [Integer] port
       # @attr [Logger] logger
       # @attr [Prometheus::Client::Registry] registry
+      # @attr [Puma::Events] events
       class Server
-        attr_reader :host, :port, :logger, :registry
+        attr_reader :host, :port, :logger, :registry, :events
 
         BACKLOG = 3
         THREADS = 1

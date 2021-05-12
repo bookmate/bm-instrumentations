@@ -3,7 +3,7 @@
 require 'net/http'
 require 'bm/instrumentations'
 
-RSpec.describe BM::Instrumentations::Management::Server do
+RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
   subject(:server_run) { described_class.run(host: host, port: 0, registry: registry) }
 
   let(:host) { '127.0.0.1' }
@@ -79,31 +79,6 @@ RSpec.describe BM::Instrumentations::Management::Server do
     it 'responds with 404' do
       expect(response).to be_not_found.have_content_type('text/plain')
       expect(response).to have_body('not found')
-    end
-  end
-
-  RSpec::Matchers.define :be_ok do
-    match { |actual| actual.is_a?(Net::HTTPOK) }
-  end
-
-  RSpec::Matchers.define :be_not_found do
-    match { |actual| actual.is_a?(Net::HTTPNotFound) }
-  end
-
-  RSpec::Matchers.define :have_content_type do |expected|
-    match { |actual| actual['Content-Type'] == expected }
-
-    failure_message do |actual|
-      "expected that #{actual['Content-Type'].inspect} is equals to #{expected.inspect}"
-    end
-  end
-
-  RSpec::Matchers.define :have_body do |expected|
-    match { |actual| actual.body.include? expected }
-
-    failure_message do |actual|
-      "expected that [#{actual.body}]\n" \
-      "contains [#{expected}]"
     end
   end
 end
