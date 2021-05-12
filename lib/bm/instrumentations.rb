@@ -23,5 +23,9 @@ module BM
     module Sequel
       autoload :MetricsCollection, 'bm/instrumentations/sequel/metrics_collection'
     end
+
+    module Management
+      autoload :Server,            'bm/instrumentations/management/server'
+    end
   end
 end

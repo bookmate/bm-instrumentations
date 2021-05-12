@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+Rake.add_rakelib 'lib/tasks/**'
 
 RuboCop::RakeTask.new :rubocop do |t|
   formatters = %w[--format progress --format RuboCop::Formatter::CheckstyleFormatter]
@@ -13,7 +12,8 @@ RuboCop::RakeTask.new :rubocop do |t|
   t.options = requires + formatters + out
 end
 
-task default: :spec
+desc 'Run RSpec code examples'
+task default: %i[spec:unit]
 
-desc 'Run rubocop and when tests'
-task ci: %i[rubocop spec]
+desc 'Run rubocop, then tests, then merge coverage reports'
+task ci: %i[rubocop spec:unit spec:integrations simplecov:merge]

@@ -12,6 +12,7 @@ Metrics/BlockLength:
     - 'spec/bm/instrumentations/**/*'
     - 'spec/sequel/extensions/**'
     - 'spec/roda/plugins/**'
+    - 'spec/integrations/**/*'
     - 'bm-instrumentations.gemspec'
 
 RSpec/MultipleExpectations:

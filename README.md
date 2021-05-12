@@ -13,6 +13,7 @@ Rack, S3, Roda and etc.
 * [AWS Client Metrics Collector](#aws-client-metrics-collector)
 * [Ruby Method Metrics Collector](#ruby-methods-metrics-collector)
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
+* [Management Server Puma plugin](#management-server-puma-plugin)
 
 <hr>
 
@@ -110,7 +111,7 @@ require 'bm/instrumentations'
 
 # Apply a plugin
 Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
-Aws::S3::Client.new(...)
+Aws::S3::Client.new(options)
 ```
 
 #### Collected metrics
@@ -140,17 +141,17 @@ invocations.
 require 'bm/instrumentations'
 
 class QueryUsers
-  include BM::Instrumentations::Timings[:user_queries] (1)
+  include BM::Instrumentations::Timings[:user_queries] # (1)
   
   def query_one(params)
     # ... any ruby code to instrument ...
   end
-  timings :query_one (2)
+  timings :query_one # (2)
   
   def query_all(params)
     # ... any ruby code to instrument ...
   end
-  timings :query_all (2)
+  timings :query_all # (2)
 end
 ```
 
@@ -189,9 +190,9 @@ collector could be able to determine which function handled a request and correc
 ```ruby
 # Apply a plugin
 class API < Roda
-  plugin(:endpoint) (1)
+  plugin(:endpoint) # (1)
 
-  endpoint def pong (2)
+  endpoint def pong # (2)
     'Pong'
   end
 
@@ -202,8 +203,33 @@ end
 ```
 
 1. Include a plugin, after included Roda has a class level method `endpoint`
-2. Use the `endpoint` to mark a specified method as a function that may handle a request. When a 
+2. Use the `endpoint` to mark a specified method as a function that may handle a request. When a
    function will be invoked a key `x.rack.endpoint` with a value `pong` will be exported into Rack env.
+
+<hr>
+
+# Management Server Puma plugin
+
+The `management_server` plugin provides monitoring and metrics on different HTTP port, it starts a separated
+`Puma::Server` that serves requests.
+
+The plugin exposes few endpoints
+* `/ping` - a liveness probe, always return `HTTP 200 OK` when the server is running
+* `/metrics` - metrics list from the current Prometheus registry
+* `/gc-status` - print ruby GC statistics as JSON
+* `/threads` - print running threads, names and backtraces as JSON
+
+By default the server is running on `0.0.0.0:9990`, the default configuration values could be override in puma
+configuration file.
+
+```ruby
+# config/puma.rb
+plugin(:management_server)
+
+# or override default configuration
+plugin(:management_server)
+management_server(host: '127.0.0.1', port: 9000, logger: Logger.new(IO::NULL))
+```
 
 # License
 
