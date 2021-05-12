@@ -9,6 +9,15 @@ require 'prometheus/middleware/exporter'
 module BM
   module Instrumentations
     module Management
+      # A management server that serves internal endpoints such as `/ping` or `/metrics` using
+      # a HTTP server on dedicated address.
+      #
+      # The server exposes few endpoints:
+      # * `/ping` - a liveness probe, always return `HTTP 200 OK` when the server is running
+      # * `/metrics` - metrics from Prometheus exporter
+      # * `/gc-status` - print ruby GC statistics as JSON
+      # * `/threads` - print running threads, names and backtraces as JSON
+      #
       # @attr [String] host
       # @attr [Integer] port
       # @attr [Logger] logger
@@ -17,13 +26,20 @@ module BM
       class Server
         attr_reader :host, :port, :logger, :registry, :events
 
+        # The socket backlog value
         BACKLOG = 3
+
+        # The number of worker threads for puma server
         THREADS = 1
+
+        # The server's thread name
         THREAD_NAME = 'management-server'
+
+        # List of served endpoints
         SERVES = %w[/ping /metrics /gc-stats /threads].freeze
 
-        # @param host [String] is a hostname to listen on
-        # @param port [Integer] is a port to listen on
+        # @param host [String]
+        # @param port [Integer]
         # @param logger [Logger]
         # @param registry [Prometheus::Client::Registry]
         #
@@ -37,25 +53,25 @@ module BM
         private_class_method :new
 
         # Creates a management server backed by {Puma::Server} then bind and
-        # listen to socket
+        # listen to.
         #
-        # @param port [Integer] is a port to listen on
-        # @param host [String, nil] is a hostname to listen on
-        # @param logger [Logger, nil]
-        # @param registry [Prometheus::Client::Registry, nil]
+        # @param port [Integer] is a port number that a server will listen to (default: `9990`)
+        # @param host [String] is a bind address that a server uses for listening (default: `0.0.0.0`)
+        # @param logger [Logger, nil] is a logger instance for notifications (default: `Logger.new($stdout)`)
+        # @param registry [Prometheus::Client::Registry, nil] override a default Prometheus registry
         #
         # @return [Running]
-        def self.run(port:, host: nil, logger: nil, registry: nil)
+        def self.run(port: nil, host: nil, logger: nil, registry: nil)
           new(
-            port: port,
-            host: host || '127.0.0.1',
+            port: port || 9990,
+            host: host || '0.0.0.0',
             logger: logger || ::Logger.new($stdout, progname: Server.name),
             registry: registry || ::Prometheus::Client.registry
           ).run
         end
 
         # Creates a management server backed by {Puma::Server} then bind and
-        # listen to socket
+        # listen to
         #
         # @return [Running]
         # @api private

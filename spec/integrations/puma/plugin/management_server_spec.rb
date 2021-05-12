@@ -33,14 +33,14 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
   end
 
   def wait_for(port, retries: 5)
-    puts "> #{host}:#{port} waiting for"
-    (1..retries).each do
+    (1..retries).each do |attempt|
       TCPSocket.new(host, port).close
-      puts "< #{host}:#{port} is ready"
-      return
+      break
     rescue Errno::ECONNREFUSED
+      raise if attempt == retries
+
       sleep 1
-      retry
+      next
     end
   end
 end
