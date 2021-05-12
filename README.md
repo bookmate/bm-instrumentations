@@ -1,6 +1,6 @@
 [![Build](https://github.com/bookmate/bm-instrumentations/actions/workflows/main.yml/badge.svg)](https://github.com/bookmate/bm-instrumentations/actions/workflows/main.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f7feeac604065b715a89/maintainability)](https://codeclimate.com/repos/609a9cecd3b4d7010f00334d/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/f7feeac604065b715a89/test_coverage)](https://codeclimate.com/repos/609a9cecd3b4d7010f00334d/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f411d33e684d199b1a76/maintainability)](https://codeclimate.com/github/bookmate/bm-instrumentations/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f411d33e684d199b1a76/test_coverage)](https://codeclimate.com/github/bookmate/bm-instrumentations/test_coverage)
 
 # Bm::Instrumentations
 
