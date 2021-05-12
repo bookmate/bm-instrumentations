@@ -59,7 +59,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
 
   describe 'collect metrics', 'when an exception has raised' do
     let(:labels) { { status: 500, service: 'S3', api: 'ListBuckets' } }
-    let(:s3_host) { non_listening_endpoint }
+    let(:s3_host) { "127.0.0.1:#{non_listening_port}" }
 
     before do
       expect { s3_client.list_buckets }.to raise_error(Seahorse::Client::NetworkingError)
@@ -76,14 +76,5 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
     it 'increments a :aws_sdk_client_retries_total' do
       expect(counter_value(:aws_sdk_client_retries_total, service: 'S3', api: 'ListBuckets')).to eq(3.0)
     end
-  end
-
-  # @return [String]
-  def non_listening_endpoint
-    require 'socket'
-    server = TCPServer.new('127.0.0.1', 0)
-    "#{server.addr[2]}:#{server.addr[1]}"
-  ensure
-    server&.close
   end
 end

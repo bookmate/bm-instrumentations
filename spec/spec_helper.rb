@@ -15,4 +15,5 @@ end
 
 require_relative 'support/rack_test_helper'
 require_relative 'support/registry_helper'
+require_relative 'support/non_listening_port_helper'
 require_relative 'support/shared_examples'

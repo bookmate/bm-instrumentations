@@ -38,8 +38,8 @@ module BM
         # Creates a management server backed by {Puma::Server} then bind and
         # listen to socket
         #
-        # @param host [String, nil] is a hostname to listen on
         # @param port [Integer] is a port to listen on
+        # @param host [String, nil] is a hostname to listen on
         # @param logger [Logger, nil]
         # @param registry [Prometheus::Client::Registry, nil]
         #
@@ -48,7 +48,7 @@ module BM
           new(
             port: port,
             host: host || '127.0.0.1',
-            logger: logger || ::Logger.new($stdout, progname: Server.class.name),
+            logger: logger || ::Logger.new($stdout, progname: Server.name),
             registry: registry || ::Prometheus::Client.registry
           ).run
         end
@@ -59,26 +59,28 @@ module BM
         # @return [Running]
         # @api private
         def run
-          server = ::Puma::Server.new(rack_app, ::Puma::Events.stdio, puma_options)
+          server = ::Puma::Server.new(rack_app, ::Puma::Events.null, puma_options)
           server.auto_trim_time = nil # disable trimming thread
           server.reaping_time = nil # disable reaping thread
           server.add_tcp_listener(host, port, _optimize_for_latency = true, _backlog = BACKLOG)
 
-          Running.new(server, logger).tap { notify_started }
+          Running.new(server, logger).tap { notify_started(_1) }
         end
 
         private
 
         # Writes log messages about just launched management server instance
-        def notify_started
+        #
+        # @param running [Running]
+        def notify_started(running)
           logger.info(
-            "Management server listen to http://#{host}:#{port}" \
-            "[Puma/#{Puma::Server::VERSION}," \
-            " threads:#{THREADS}," \
+            "Management server listen to http://#{host}:#{running.port}" \
+            " [Puma/#{Puma::Server::VERSION}" \
+            " threads:#{THREADS}" \
             " backlog:#{BACKLOG}]"
           )
 
-          logger.info("Management serves #{SERVES.join(' ')}")
+          logger.info("Management serves [#{SERVES.join(' ')}]")
         end
 
         # @return [Hash<Symbol, Any>]
@@ -104,13 +106,15 @@ module BM
         #
         # @attr server [Puma::Server]
         # @attr logger [Logger]
+        # @attr port [Integer]
         class Running
-          attr_reader :server, :logger
+          attr_reader :server, :logger, :port
 
           # @param server [Puma::Server]
           # @param logger [Logger]
           def initialize(server, logger)
             @server = server
+            @port = server.connected_ports.first
             @logger = logger
             server.run(_background = true, thread_name: THREAD_NAME)
           end
