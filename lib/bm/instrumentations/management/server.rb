@@ -4,6 +4,7 @@ require 'rack'
 require 'logger'
 require 'puma'
 require 'prometheus/client'
+require 'prometheus/client/formats/text'
 
 module BM
   module Instrumentations
