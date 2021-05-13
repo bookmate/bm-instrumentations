@@ -10,9 +10,9 @@
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 
-VALUE socket_backlog_size(VALUE tcp_server, bool raise) __attribute__ ((visibility ("hidden") ));
+VALUE tcp_server_socket_backlog(VALUE tcp_server, bool raise) __attribute__ ((visibility ("hidden") ));
 
-VALUE socket_backlog_size(VALUE tcp_server, bool raise) {
+VALUE tcp_server_socket_backlog(VALUE tcp_server, bool raise) {
   int fd = NUM2INT(rb_funcall(tcp_server, rb_intern("to_i"), 0));
  	socklen_t tis = sizeof(struct tcp_info);
  	struct tcp_info ti;
@@ -34,20 +34,20 @@ VALUE socket_backlog_size(VALUE tcp_server, bool raise) {
   return hash;
 }
 
-VALUE rb_tcp_server_socket_backlog_size(VALUE self) {
-  return socket_backlog_size(self, true);
+VALUE rb_tcp_server_socket_backlog(VALUE self) {
+  return tcp_server_socket_backlog(self, true);
 }
 
-VALUE rb_tcp_server_try_socket_backlog_size(VALUE self) {
-  return socket_backlog_size(self, false);
+VALUE rb_try_tcp_server_socket_backlog(VALUE self) {
+  return tcp_server_socket_backlog(self, false);
 }
 
 #endif
 
-void Init_tcp_server_socket_backlog_size() {
+void Init_tcp_server_socket_backlog() {
 #if __linux__
   VALUE tcp_server = rb_const_get(rb_cObject, rb_intern("TCPServer"));
-  rb_define_method(tcp_server, "socket_backlog_size", rb_tcp_server_try_socket_backlog_size, 0);
-  rb_define_method(tcp_server, "socket_backlog_size!", rb_tcp_server_socket_backlog_size, 0);
+  rb_define_method(tcp_server, "socket_backlog", rb_try_tcp_server_socket_backlog, 0);
+  rb_define_method(tcp_server, "socket_backlog!", rb_tcp_server_socket_backlog, 0);
 #endif
 }

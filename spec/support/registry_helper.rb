@@ -14,6 +14,7 @@ RSpec.configure do |config|
     def counter_value(name, labels = {})
       registry.get(name)&.get(labels: labels) || 0.0
     end
+    alias_method :gauge_value, :counter_value
 
     # @return [Hash<String, Float>]
     def histogram_value(name, labels = {})

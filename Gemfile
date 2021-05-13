@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake', '~> 11.2'
+gem 'rake-compiler', '~> 1.1'
 gem 'rspec', '~> 3.10'
 
 gem 'rubocop', '= 1.14.0'

@@ -27,12 +27,12 @@ Gem::Specification.new do |spec|
   end
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|bin)/}) }
   end
 
-  spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = %w[lib ext]
+  spec.extensions    = %w[ext/tcp_server_socket_backlog/extconf.rb]
+  spec.require_paths = %w[lib]
 
   spec.add_dependency 'prometheus-client', '~> 2.1'
 end

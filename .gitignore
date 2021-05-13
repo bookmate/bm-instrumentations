@@ -11,6 +11,7 @@
 .rspec_status
 Gemfile.lock
 
-ext/*
-!ext/*.c
-!ext/*.rb
+ext/*/*
+!ext/*/*.c
+!ext/*/*.rb
+lib/tcp_server_socket_backlog

@@ -2,7 +2,7 @@
 
 require 'socket'
 require 'prometheus/client'
-require 'tcp_server_socket_backlog_size'
+require 'tcp_server_socket_backlog/tcp_server_socket_backlog'
 
 module BM
   module Instrumentations
@@ -20,7 +20,7 @@ module BM
           @launcher = launcher
 
           # TCP_INFO with backlog statistics is Linux only
-          @is_socket_backlog = TCPServer.method_defined?(:socket_backlog_size)
+          @is_socket_backlog = TCPServer.method_defined?(:socket_backlog)
         end
 
         # Updates Puma metrics in the registry
@@ -29,7 +29,7 @@ module BM
           return unless is_socket_backlog
 
           launcher.binder.ios.each_with_index do |io, index|
-            backlog = io.socket_backlog_size
+            backlog = io.socket_backlog
             metrics_collection.update_backlog(listener: index, backlog: backlog) if backlog
           end
         end
