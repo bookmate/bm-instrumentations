@@ -27,5 +27,10 @@ module BM
     module Management
       autoload :Server,            'bm/instrumentations/management/server'
     end
+
+    module Puma
+      autoload :Collector,         'bm/instrumentations/puma/collector'
+      autoload :MetricsCollection, 'bm/instrumentations/puma/metrics_collection'
+    end
   end
 end

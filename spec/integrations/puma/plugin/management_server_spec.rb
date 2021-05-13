@@ -30,6 +30,9 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
 
     pong = Net::HTTP.get_response(URI("http://#{host}:#{management_port}/ping"))
     expect(pong).to be_ok.have_body('pong')
+
+    metrics = Net::HTTP.get_response(URI("http://#{host}:#{management_port}/metrics"))
+    expect(metrics).to be_ok
   end
 
   def wait_for(port, retries: 5)

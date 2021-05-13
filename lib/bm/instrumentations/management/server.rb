@@ -23,8 +23,9 @@ module BM
       # @attr [Logger] logger
       # @attr [Prometheus::Client::Registry] registry
       # @attr [Puma::Events] events
+      # @attr [Puma::Collector, nil] puma_metrics
       class Server
-        attr_reader :host, :port, :logger, :registry, :events
+        attr_reader :host, :port, :logger, :registry, :events, :puma_metrics
 
         # The socket backlog value
         BACKLOG = 3
@@ -42,13 +43,15 @@ module BM
         # @param port [Integer]
         # @param logger [Logger]
         # @param registry [Prometheus::Client::Registry]
+        # @param puma_launcher [Puma::Laucher, nil]
         #
         # @api private
-        def initialize(port:, host:, logger:, registry:)
+        def initialize(port:, host:, logger:, registry:, puma_launcher: nil)
           @host = host
           @port = port
           @logger = logger
           @registry = registry
+          @puma_metrics = puma_launcher ? Puma::Collector.new(registry: registry, launcher: puma_launcher) : nil
         end
         private_class_method :new
 
@@ -58,14 +61,16 @@ module BM
         # @param host [String] is a bind address that a server uses for listening (default: `0.0.0.0`)
         # @param logger [Logger, nil] is a logger instance for notifications (default: `Logger.new($stdout)`)
         # @param registry [Prometheus::Client::Registry, nil] override a default Prometheus registry
+        # @param puma_launcher [Puma::Launcher, nil]
         #
         # @return [Running]
-        def self.run(port: nil, host: nil, logger: nil, registry: nil)
+        def self.run(port: nil, host: nil, logger: nil, registry: nil, puma_launcher: nil)
           new(
             port: port || 9990,
             host: host || '0.0.0.0',
             logger: logger || ::Logger.new($stdout, progname: Server.name),
-            registry: registry || ::Prometheus::Client.registry
+            registry: registry || ::Prometheus::Client.registry,
+            puma_launcher: puma_launcher
           ).run
         end
 
@@ -91,7 +96,7 @@ module BM
         def notify_started(running)
           logger.info(
             "Management server listen to http://#{host}:#{running.port}" \
-            " [Puma/#{Puma::Server::VERSION}" \
+            " [Puma/#{::Puma::Server::VERSION}" \
             " threads:#{THREADS}" \
             " backlog:#{BACKLOG}]"
           )
@@ -113,7 +118,7 @@ module BM
         #
         # @return [#call] a frozen rack application
         def rack_app
-          ::Rack::ShowExceptions.new(ServeEndpoints.new(registry)).freeze
+          ::Rack::ShowExceptions.new(ServeEndpoints.new(registry, puma_metrics)).freeze
         end
 
         # Handles a running server instance
@@ -155,8 +160,10 @@ module BM
           NOT_FOUND = [404, PLAIN_TEXT, ['not found']].freeze
 
           # @param registry [Prometheus::Client::Registry]
-          def initialize(registry)
+          # @param puma_metrics [Puma::Metrics, nil]
+          def initialize(registry, puma_metrics)
             @registry = registry
+            @puma_metrics = puma_metrics
           end
 
           # @param env [Hash<String, Any>]
@@ -182,6 +189,8 @@ module BM
 
           # @return [(Integer, Hash<String, String>, Array<String>)]
           def metrics
+            @puma_metrics&.update
+
             text = Prometheus::Client::Formats::Text.marshal(@registry)
             [200, METRICS_TEXT, [text]]
           end
