@@ -27,7 +27,11 @@ Gem::Specification.new do |spec|
   end
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|bin)/}) }
+    `git ls-files -z`
+      .split("\x0")
+      .reject { _1.match(/^\./) }
+      .reject { _1.match(%r{^(test|spec|features|bin)/}) }
+      .reject { _1.match(%r{^(CODE_OF_CONDUIT|Gemfile|Rakefile|docker-compose|lib/tasks)}) }
   end
 
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
