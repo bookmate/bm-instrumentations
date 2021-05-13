@@ -231,6 +231,17 @@ plugin(:management_server)
 management_server(host: '127.0.0.1', port: 9000, logger: Logger.new(IO::NULL))
 ```
 
+#### Collected metrics
+
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `puma_thread_pool_max_size` | gauge | - | The preconfigured maximum number of worker threads in the Puma server |
+| `puma_thread_pool_size` | gauge | - | The number of spawned worker threads in the Puma server |
+| `puma_thread_pool_active_size` | gauge | - | The number of worker threads that actively executing requests in the Puma server |
+| `puma_thread_pool_queue_size` | gauge | - | The number of queued requests that waiting execution in the Puma server |
+| `puma_server_socket_backlog_size` | gauge | `listener` | __Linux only__<br>The current size of the pending connection queue of the Puma listener | 
+| `puma_server_socket_backlog_max_size` | gauge | `listener` | __Linux only__<br>The preconfigured maximum size of the pending connections queue of the Puma listener |
+
 # License
 
 The gem is available as open source under the terms of the [MIT
