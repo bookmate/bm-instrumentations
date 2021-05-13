@@ -14,6 +14,7 @@ gem 'rubocop-performance', '= 1.11.3'
 gem 'rubocop-rake', '= 0.5.1'
 gem 'rubocop-rspec', '= 2.3.0'
 
+gem 'nexus', '= 1.4.0'
 gem 'rspec_junit_formatter', '= 0.4.1'
 gem 'simplecov', '= 0.21.1'
 
