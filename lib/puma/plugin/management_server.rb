@@ -35,16 +35,19 @@ Puma::DSL.include BM::Instrumentations::Management::PumaDSL
 
 Puma::Plugin.create do
   # @param launcher [Puma::Launcher]
-  def start(launcher)
-    host = launcher.options[:management_server_host]
-    port = launcher.options[:management_server_port]
-    logger = launcher.options[:management_server_logger]
-    registry = launcher.options[:management_server_registry]
+  def start(launcher) # rubocop:disable Metrics/MethodLength
+    args = {
+      host: launcher.options[:management_server_host],
+      port: launcher.options[:management_server_port],
+      logger: launcher.options[:management_server_logger],
+      registry: launcher.options[:management_server_registry],
+      puma_launcher: launcher
+    }
 
     # @type [Puma::Events]
     events = launcher.events
     events.on_booted do
-      server = BM::Instrumentations::Management::Server.run(port: port, host: host, logger: logger, registry: registry)
+      server = BM::Instrumentations::Management::Server.run(**args)
       events.on_stopped { server.shutdown }
     end
   end

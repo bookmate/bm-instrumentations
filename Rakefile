@@ -2,8 +2,13 @@
 
 require 'bundler/gem_tasks'
 require 'rubocop/rake_task'
+require 'rake/extensiontask'
 
 Rake.add_rakelib 'lib/tasks/**'
+
+Rake::ExtensionTask.new 'tcp_server_socket_backlog' do |ext|
+  ext.lib_dir = 'lib/tcp_server_socket_backlog'
+end
 
 RuboCop::RakeTask.new :rubocop do |t|
   formatters = %w[--format progress --format RuboCop::Formatter::CheckstyleFormatter]

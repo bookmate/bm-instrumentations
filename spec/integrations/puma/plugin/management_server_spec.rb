@@ -10,7 +10,7 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
   let(:puma) do
     Puma::Launcher.new(Puma::Configuration.new do |cfg|
       cfg.bind "tcp://#{host}:#{puma_port}"
-      cfg.threads 1, 1
+      cfg.threads 2, 2
 
       cfg.plugin(:management_server)
       cfg.management_server(host: host, port: management_port)
@@ -30,6 +30,19 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
 
     pong = Net::HTTP.get_response(URI("http://#{host}:#{management_port}/ping"))
     expect(pong).to be_ok.have_body('pong')
+
+    metrics = Net::HTTP.get_response(URI("http://#{host}:#{management_port}/metrics"))
+    inspect_metrics(metrics)
+  end
+
+  def inspect_metrics(metrics)
+    expect(metrics).to be_ok
+
+    body = metrics.body
+    expect(body).to include("puma_thread_pool_max_size 2.0\n")
+    expect(body).to include("puma_thread_pool_size 2.0\n")
+    expect(body).to include("puma_thread_pool_active_size 0.0\n")
+    expect(body).to include("puma_thread_pool_queue_size 0.0\n")
   end
 
   def wait_for(port, retries: 5)
