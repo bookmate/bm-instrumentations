@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7.0'
 
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'https://nexus.bookmate.services'
+    spec.metadata['allowed_push_host'] = 'https://nexus.bookmate.services/repository/bookmate/'
 
     spec.metadata['homepage_uri'] = spec.homepage
     spec.metadata['source_code_uri'] = spec.homepage
@@ -27,7 +27,11 @@ Gem::Specification.new do |spec|
   end
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|bin)/}) }
+    `git ls-files -z`
+      .split("\x0")
+      .reject { _1.match(/^\./) }
+      .reject { _1.match(%r{^(test|spec|features|bin)/}) }
+      .reject { _1.match(%r{^(CODE_OF_CONDUIT|Gemfile|Rakefile|docker-compose|lib/tasks)}) }
   end
 
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
