@@ -21,6 +21,7 @@ module BM
 
         # @param registry [Prometheus::Client::Registry]
         def initialize(registry)
+          build_server_version(registry)
           build_thread_pool_max_size(registry)
           build_thread_pool_size(registry)
           build_thread_pool_active_size(registry)
@@ -55,6 +56,13 @@ module BM
           socket_backlog_max_size.set(backlog[:backlog_max_size], labels: labels)
         end
 
+        # Sets the Puma server version
+        #
+        # @param version [String]
+        def server_version(version)
+          @server_version.set(1, labels: { version: version })
+        end
+
         private
 
         # @param stats [Hash<Symbol, Integer>]
@@ -63,6 +71,16 @@ module BM
           # pool_capacity = waiting + (max_threads - running)
           waiting = stats[:pool_capacity] - (stats[:max_threads] - stats[:running])
           stats[:running] - waiting
+        end
+
+        def build_server_version(registry)
+          @server_version = register_metric(registry, :puma_server_version) do |name|
+            registry.gauge(
+              name,
+              docstring: 'The version number of the running Puma server',
+              labels: %i[version]
+            )
+          end
         end
 
         # @param registry [Prometheus::Client::Registry]
