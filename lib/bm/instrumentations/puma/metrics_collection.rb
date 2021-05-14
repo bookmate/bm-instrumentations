@@ -5,7 +5,6 @@ module BM
     module Puma
       # A collection of Prometheus metrics for Puma server
       #
-      # @attr [Prometheus::Client::Gauge] version
       # @attr [Prometheus::Client::Gauge] thread_pool_max_size
       # @attr [Prometheus::Client::Gauge] thread_pool_size
       # @attr [Prometheus::Client::Gauge] thread_pool_active_size
