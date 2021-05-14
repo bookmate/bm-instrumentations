@@ -21,6 +21,8 @@ module BM
 
           # TCP_INFO with backlog statistics is Linux only
           @is_socket_backlog = TCPServer.method_defined?(:socket_backlog)
+
+          metrics_collection.server_version(Puma::Server::VERSION)
         end
 
         # Updates Puma metrics in the registry

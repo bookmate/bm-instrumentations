@@ -26,6 +26,12 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
 
   after { [client, listener].each(&:close) }
 
+  it 'assigns the Puma server version' do
+    collector
+
+    expect(gauge_value(:puma_server_version, version: Puma::Server::VERSION)).to eq(1.0)
+  end
+
   describe '#update', 'with launcher stats' do
     before do
       collector.update
