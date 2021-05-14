@@ -50,7 +50,7 @@ module BM
         def record(env, method, stopwatch)
           app.call(env).tap do |resp|
             metrics_collection.record_request(
-              status: resp.first, method: method, path: env[ENDPOINT], stopwatch: stopwatch
+              status_code: resp.first, method: method, path: env[ENDPOINT], stopwatch: stopwatch
             )
           end
         rescue StandardError => e

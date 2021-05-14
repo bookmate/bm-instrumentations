@@ -61,15 +61,16 @@ The middleware has some optional parameters:
 
 | Metrics | Type | Labels | Description |
 |---------|------|--------|-------------|
-| `http_server_requests_total` | counter |  `method`<br>`path`<br>`status` | the total number of HTTP requests handled by the Rack application |
+| `http_server_requests_total` | counter |  `method`<br>`path`<br>`status`<br>`status_code` | the total number of HTTP requests handled by the Rack application |
 | `http_server_exceptions_total` | counter | `method`<br>`path`<br>`exception` | the total number of uncaught exceptions raised by the Rack application |
-| `http_server_request_duration_seconds` | histogram | `method`<br>`path`<br>`status` | the HTTP response times in seconds of the Rack application |
+| `http_server_request_duration_seconds` | histogram | `method`<br>`path`<br>`status`<br>`status_code` | the HTTP response times in seconds of the Rack application |
 
 #### Labels
 
 * `method` is a HTTP method name such as `GET` or `POST`
 * `path` is an endpoint’s path that handled a request, `none` if undefined
-* `status` is a HTTP status code from response such as `200` or `500`
+* `status` is a cumulative value of a HTTP status code like `2xx` or `5xx`
+* `status_code` is a HTTP status code from response such as `200` or `500` 
 * `exception` is an uncaught exception class name such as `RuntimeError` or
 `Errno::ENOENT`
 

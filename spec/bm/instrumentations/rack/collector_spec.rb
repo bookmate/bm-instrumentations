@@ -8,8 +8,8 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   let(:exclude_path) { '/ignore' }
-  let(:status) { 200 }
-  let(:callable) { ->(env) { [status, env, 'app'] } }
+  let(:status_code) { 200 }
+  let(:callable) { ->(env) { [status_code, env, 'app'] } }
 
   it 'registers metrics in registry' do
     app
@@ -35,7 +35,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   describe 'collect metrics' do
-    let(:labels) { { status: 200, method: 'GET', path: 'none' } }
+    let(:labels) { { status: '2xx', status_code: 200, method: 'GET', path: 'none' } }
 
     before { get '/' }
 
@@ -50,13 +50,13 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   describe 'collect metrics', 'when HTTP status code is not 200' do
-    let(:status) { 401 }
-    let(:labels) { { status: status, method: 'GET', path: 'none' } }
+    let(:status_code) { 401 }
+    let(:labels) { { status: '4xx', status_code: status_code, method: 'GET', path: 'none' } }
 
     before { get '/' }
 
     it 'is ok response' do
-      expect(last_response.status).to eq(status)
+      expect(last_response.status).to eq(status_code)
       expect(last_response.body).to eq('app')
     end
 
@@ -66,7 +66,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   describe 'collect metrics', 'with uncaught exception' do
-    let(:labels) { { status: 500, method: 'GET', path: 'none' } }
+    let(:labels) { { status: '5xx', status_code: 500, method: 'GET', path: 'none' } }
     let(:callable) { ->(_) { raise 'boom' } }
 
     before { expect { get '/' }.to raise_error('boom') }
@@ -78,11 +78,11 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   describe 'collect metrics', 'when an endpoint has a name' do
-    let(:labels) { { status: 200, method: 'GET', path: 'endpoint_name' } }
+    let(:labels) { { status: '2xx', status_code: 200, method: 'GET', path: 'endpoint_name' } }
     let(:callable) do
       lambda do |env|
         env[BM::Instrumentations::Rack::ENDPOINT] = 'endpoint_name'
-        [status, env, 'app']
+        [status_code, env, 'app']
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
   end
 
   describe 'collect metrics', 'when endpoint has a name and an uncaught exception' do
-    let(:labels) { { status: 500, method: 'GET', path: 'endpoint_name' } }
+    let(:labels) { { status: '5xx', status_code: 500, method: 'GET', path: 'endpoint_name' } }
     let(:callable) do
       lambda do |env|
         env[BM::Instrumentations::Rack::ENDPOINT] = 'endpoint_name'

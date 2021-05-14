@@ -30,13 +30,14 @@ module BM
 
         # Record metrics for a handled request
         #
-        # @param status [Integer] is a HTTP status code from response
+        # @param status_code [Integer] is a HTTP status code from response
         # @param method [String] is a HTTP method from request
         # @param path [String, nil] is a HTTP path name of handled request, may be nil
         # @param stopwatch [Instrumentations::Stopwatch] is a started timer
-        def record_request(status:, method:, path:, stopwatch:)
+        def record_request(status_code:, method:, path:, stopwatch:)
           labels = {
-            status: status,
+            status: status_value(status_code),
+            status_code: status_code,
             method: method,
             path: path || NONE
           }
@@ -52,7 +53,7 @@ module BM
         # @param stopwatch [Instrumentations::Stopwatch] is a started timer
         # @param exception [StandardError] is an uncaught exception
         def record_exception(method:, path:, stopwatch:, exception:)
-          record_request(status: INTERNAL_SERVER_ERROR, method: method, path: path, stopwatch: stopwatch)
+          record_request(status_code: INTERNAL_SERVER_ERROR, method: method, path: path, stopwatch: stopwatch)
 
           labels = {
             method: method,
@@ -63,6 +64,13 @@ module BM
         end
 
         private
+
+        # @param status_code [Integer] is a HTTP status code
+        # @return [String]
+        def status_value(status_code)
+          id = (status_code / 100).to_i
+          "#{id}xx"
+        end
 
         # @param registry [Prometheus::Client::Registry]
         def build_exceptions_total(registry)
@@ -83,7 +91,7 @@ module BM
               name,
               docstring:
                 'The HTTP response times in seconds of the Rack application',
-              labels: %i[method path status]
+              labels: %i[method path status status_code]
             )
           end
         end
@@ -95,7 +103,7 @@ module BM
               name,
               docstring:
                 'The total number of HTTP requests handled by the Rack application',
-              labels: %i[method path status]
+              labels: %i[method path status status_code]
             )
           end
         end
