@@ -2,12 +2,14 @@
 
 require 'bundler'
 
-require_relative 'support/simplecov_start' unless ENV.fetch('SIMPLECOV', '').empty?
+require_relative 'setup/simplecov'
+require_relative 'setup/rspec_formatters'
 
 RSpec.configure do |config|
-  config.filter_run_excluding(integration: true) if ENV.fetch('INTEGRATION_SPECS', '').empty?
+  config.filter_run_excluding(integration: true)
   config.example_status_persistence_file_path = '.rspec_status'
   config.disable_monkey_patching!
+  config.order = :random
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
