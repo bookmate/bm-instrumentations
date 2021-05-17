@@ -8,10 +8,8 @@ namespace :spec do
   desc 'Run Integrations Specs'
   task :integrations do
     Dir['spec/integrations/**/*_spec.rb'].each_with_index do |file, idx|
-      env = ["SIMPLECOV=#{ENV['SIMPLECOV']}"]
-      env << ["SIMPLECOV_COMMAND_NAME=integration-#{idx}"]
-      env << ['INTEGRATION_SPECS=1']
-      sh "#{env.join(' ')} bundle exec rspec #{file}"
+      env = %W[SIMPLECOV=#{ENV['SIMPLECOV']} TEST_SUITE=integration-#{idx}]
+      sh "#{env.join(' ')} bundle exec rspec --tag integration #{file}"
     end
   end
 end
