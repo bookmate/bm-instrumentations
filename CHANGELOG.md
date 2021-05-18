@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Ability to use custom metric collectors
+
 ### Changed
 
 - __Breaking__ The class `BM::Instrumentations::Aws::Collector` turned into gem private,
