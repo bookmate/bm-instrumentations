@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'bm/instrumentations'
-require 'prometheus/middleware/exporter'
 
 class Roda
   # :nodoc:
@@ -22,7 +21,7 @@ class Roda
       # @param registry [Prometheus::Client::Registry, nil] override the default registry
       # @param exclude_path [String, Array<String>, nil] override the default (/metrics) exclude path
       def self.configure(app, registry: nil, exclude_path: nil)
-        app.use ::BM::Instrumentations::Rack::Collector, registry: registry, exclude_path: exclude_path
+        app.use ::BM::Instrumentations::Rack, registry: registry, exclude_path: exclude_path
       end
     end
 

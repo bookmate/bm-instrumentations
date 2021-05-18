@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'roda'
+require 'prometheus/client'
 
 RSpec.describe 'Roda::RodaPlugins::PrometheusInstrumentation', rack: true do
   let(:app) do

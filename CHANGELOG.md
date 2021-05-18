@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
 ### Changed
 
 - __Breaking__ The class `BM::Instrumentations::Aws::Collector` turned into gem private,
@@ -17,10 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the method `BM::Instrumentations::Management.server` should be use to create a server
 - __Breaking__ The middleware `BM::Instrumentations::Rack::Collector` renamed to 
   `BM::Instrumentations::Rack`
-
-### Removed
-
-### Fixed
 
 ## [0.1.1] - 2021-05-14
 
