@@ -12,9 +12,5 @@ module BM
     autoload :Aws,            'bm/instrumentations/aws/collector'
     autoload :Management,     'bm/instrumentations/management/server'
     autoload :Rack,           'bm/instrumentations/rack/middleware'
-
-    module Sequel
-      autoload :MetricsCollection, 'bm/instrumentations/sequel/metrics_collection'
-    end
   end
 end
