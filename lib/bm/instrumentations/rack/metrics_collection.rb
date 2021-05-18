@@ -2,7 +2,7 @@
 
 module BM
   module Instrumentations
-    module Rack
+    class Rack
       # A collection of Prometheus metrics for HTTP server requests and responses
       #
       # @attr [Prometheus::Client::Counter] requests_total

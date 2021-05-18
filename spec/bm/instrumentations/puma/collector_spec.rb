@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bm/instrumentations'
+require 'bm/instrumentations/puma/collector'
 
 RSpec.describe BM::Instrumentations::Puma::Collector do
   subject(:collector) { described_class.new(registry: registry, launcher: launcher) }

@@ -46,9 +46,11 @@ Puma::Plugin.create do
 
     # @type [Puma::Events]
     events = launcher.events
+    server = BM::Instrumentations::Management.server(**args)
+
     events.on_booted do
-      server = BM::Instrumentations::Management::Server.run(**args)
-      events.on_stopped { server.shutdown }
+      running = server.run
+      events.on_stopped { running.shutdown }
     end
   end
 end

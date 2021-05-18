@@ -4,7 +4,7 @@ require 'net/http'
 require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
-  subject(:server_run) { described_class.run(host: host, port: 0, registry: registry) }
+  subject(:server_run) { BM::Instrumentations::Management.server(host: host, port: 0, registry: registry).run }
 
   let(:host) { '127.0.0.1' }
   let(:registry) { Prometheus::Client::Registry.new }

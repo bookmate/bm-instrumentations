@@ -24,8 +24,8 @@ RSpec.describe BM::Instrumentations::Timings do
   end
 
   it 'includes a timings module' do
-    expect(app.method(:foo).source_location[0]).to be_end_with('bm/instrumentations/timings.rb')
-    expect(app.method(:fails).source_location[0]).to be_end_with('bm/instrumentations/timings.rb')
+    expect(app.method(:foo).source_location[0]).to be_end_with('bm/instrumentations/timings/timings.rb')
+    expect(app.method(:fails).source_location[0]).to be_end_with('bm/instrumentations/timings/timings.rb')
   end
 
   it 'registers metrics in registry' do

@@ -8,10 +8,10 @@ Provides Prometheus metrics collectors and integrations for Sequel,
 Rack, S3, Roda and etc.
 
 * [Installation](#installation)
-* [Rack Metrics Collector](#rack-metrics-collector)
-* [Sequel Metrics Collector](#sequel-metrics-collector)
-* [AWS Client Metrics Collector](#aws-client-metrics-collector)
-* [Ruby Method Metrics Collector](#ruby-methods-metrics-collector)
+* [Rack Metrics](#rack-metrics)
+* [Sequel Metrics](#sequel-metrics)
+* [AWS Client Metrics](#aws-client-metrics)
+* [Ruby Method Metrics](#ruby-methods-metrics)
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
 * [Management Server Puma plugin](#management-server-puma-plugin)
 
@@ -39,15 +39,15 @@ $ gem install bm-instrumentations
 
 <hr>
 
-## Rack Metrics Collector
+## Rack Metrics
 
-`Sequel::Extensions::PrometheusInstrumentation` is a Rack middleware that collect metrics for HTTP request and 
+`BM::Instrumentations::Rack` is a Rack middleware that collect metrics for HTTP request and 
 responses.
 
 ```ruby
 # config.ru
 require 'bm/instrumentations'
-use BM::Instrumentations::Rack::Collector, exclude_path: %w[/metrics /ping]
+use BM::Instrumentations::Rack, exclude_path: %w[/metrics /ping]
 ```
 
 The middleware has some optional parameters:
@@ -76,7 +76,7 @@ The middleware has some optional parameters:
 
 <hr>
 
-## Sequel Metrics Collector
+## Sequel Metrics
 
 `Sequel::Extensions::PrometheusInstrumentation` is a Sequel extension that instrument a database queries and write
 metrics into Prometheus.
@@ -102,17 +102,17 @@ db.extension(:prometheus_instrumentation)
 
 <hr>
 
-## AWS Client Metrics Collector
+## AWS Client Metrics
 
-`BM::Instrumentations::Aws::Collector` is an AWS client plugin that instrument API calls and write metrics into 
+`BM::Instrumentations::Aws.plugin` is an AWS client plugin that instrument API calls and write metrics into 
 Prometheus.
 
 ```ruby
 require 'bm/instrumentations'
 
 # Apply a plugin
-Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
-Aws::S3::Client.new(options)
+Aws::S3::Client.add_plugin(BM::Instrumentations::Aws.plugin)
+s3_client = Aws::S3::Client.new(options)
 ```
 
 #### Collected metrics
@@ -133,7 +133,7 @@ Aws::S3::Client.new(options)
 
 <hr>
 
-## Ruby Methods Metrics Collector
+## Ruby Methods Metrics
 
 `BM::Instrumentations::Timings` is an observer that watch on specified ruby method and write metrics about the method
 invocations.

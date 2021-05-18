@@ -3,13 +3,35 @@
 require 'rack'
 require 'logger'
 require 'puma'
-require 'prometheus/client'
 require 'prometheus/client/formats/text'
+require 'bm/instrumentations/puma/collector'
 
 module BM
   module Instrumentations
+    # :nodoc:
     module Management
-      # The `management_server` plugin provides monitoring and metrics on different HTTP port, it starts a separated
+      # Creates the management server backed by {Puma::Server} then bind and listen to.
+      #
+      # @param port [Integer] is a port number that a server will listen to (default: `9990`)
+      # @param host [String] is a bind address that a server uses for listening (default: `0.0.0.0`)
+      # @param logger [Logger, nil] is a logger instance for notifications (default: `Logger.new($stdout)`)
+      # @param registry [Prometheus::Client::Registry, nil] override a default Prometheus registry
+      # @param puma_launcher [Puma::Launcher, nil]
+      #
+      # @return [Server]
+      def self.server(port: nil, host: nil, logger: nil, registry: nil, puma_launcher: nil)
+        registry ||= ::Prometheus::Client.registry
+        puma_metrics = puma_launcher ? Puma::Collector.new(registry: registry, launcher: puma_launcher) : nil
+        Server.new(
+          port: port || 9990,
+          host: host || '0.0.0.0',
+          logger: logger || ::Logger.new($stdout, progname: Server.name),
+          registry: registry,
+          puma_metrics: puma_metrics
+        )
+      end
+
+      # The `management_server` provides monitoring and metrics on different HTTP port, it starts a separate
       # {Puma::Server} that serves requests.
       #
       # The server exposes few endpoints:
@@ -43,42 +65,21 @@ module BM
         # @param port [Integer]
         # @param logger [Logger]
         # @param registry [Prometheus::Client::Registry]
-        # @param puma_launcher [Puma::Laucher, nil]
+        # @param puma_metrics [Puma::Collector, nil]
         #
         # @api private
-        def initialize(port:, host:, logger:, registry:, puma_launcher: nil)
+        def initialize(port:, host:, logger:, registry:, puma_metrics: nil)
           @host = host
           @port = port
           @logger = logger
           @registry = registry
-          @puma_metrics = puma_launcher ? Puma::Collector.new(registry: registry, launcher: puma_launcher) : nil
-        end
-        private_class_method :new
-
-        # Creates the management server backed by {Puma::Server} then bind and listen to.
-        #
-        # @param port [Integer] is a port number that a server will listen to (default: `9990`)
-        # @param host [String] is a bind address that a server uses for listening (default: `0.0.0.0`)
-        # @param logger [Logger, nil] is a logger instance for notifications (default: `Logger.new($stdout)`)
-        # @param registry [Prometheus::Client::Registry, nil] override a default Prometheus registry
-        # @param puma_launcher [Puma::Launcher, nil]
-        #
-        # @return [Running]
-        def self.run(port: nil, host: nil, logger: nil, registry: nil, puma_launcher: nil)
-          new(
-            port: port || 9990,
-            host: host || '0.0.0.0',
-            logger: logger || ::Logger.new($stdout, progname: Server.name),
-            registry: registry || ::Prometheus::Client.registry,
-            puma_launcher: puma_launcher
-          ).run
+          @puma_metrics = puma_metrics
         end
 
         # Creates a management server backed by {Puma::Server} then bind and
         # listen to
         #
         # @return [Running]
-        # @api private
         def run
           server = ::Puma::Server.new(rack_app, ::Puma::Events.null, puma_options)
           server.auto_trim_time = nil # disable trimming thread
