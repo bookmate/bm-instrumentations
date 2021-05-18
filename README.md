@@ -142,7 +142,7 @@ invocations.
 require 'bm/instrumentations'
 
 class QueryUsers
-  include BM::Instrumentations::Timings.for(:user_queries) # (1)
+  include BM::Instrumentations::Timings[:user_queries] # (1)
   
   def query_one(params)
     # ... any ruby code to instrument ...
