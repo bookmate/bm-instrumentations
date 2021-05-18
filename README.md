@@ -9,9 +9,9 @@ Rack, S3, Roda and etc.
 
 * [Installation](#installation)
 * [Rack Metrics](#rack-metrics)
-* [Sequel Metrics Collector](#sequel-metrics-collector)
+* [Sequel Metrics](#sequel-metrics)
 * [AWS Client Metrics](#aws-client-metrics)
-* [Ruby Method Metrics Collector](#ruby-methods-metrics-collector)
+* [Ruby Method Metrics](#ruby-methods-metrics)
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
 * [Management Server Puma plugin](#management-server-puma-plugin)
 
@@ -76,7 +76,7 @@ The middleware has some optional parameters:
 
 <hr>
 
-## Sequel Metrics Collector
+## Sequel Metrics
 
 `Sequel::Extensions::PrometheusInstrumentation` is a Sequel extension that instrument a database queries and write
 metrics into Prometheus.
@@ -133,7 +133,7 @@ s3_client = Aws::S3::Client.new(options)
 
 <hr>
 
-## Ruby Methods Metrics Collector
+## Ruby Methods Metrics
 
 `BM::Instrumentations::Timings` is an observer that watch on specified ruby method and write metrics about the method
 invocations.
@@ -142,7 +142,7 @@ invocations.
 require 'bm/instrumentations'
 
 class QueryUsers
-  include BM::Instrumentations::Timings[:user_queries] # (1)
+  include BM::Instrumentations::Timings.for(:user_queries) # (1)
   
   def query_one(params)
     # ... any ruby code to instrument ...

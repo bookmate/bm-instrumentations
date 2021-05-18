@@ -3,7 +3,6 @@
 require 'rack'
 require 'logger'
 require 'puma'
-require 'prometheus/client'
 require 'prometheus/client/formats/text'
 require 'bm/instrumentations/puma/collector'
 

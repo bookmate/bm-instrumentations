@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'prometheus/client'
 require 'bm/instrumentations/version'
 
 module BM

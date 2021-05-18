@@ -2,8 +2,8 @@
 
 require 'socket'
 require 'puma'
-require 'prometheus/client'
 require 'tcp_server_socket_backlog/tcp_server_socket_backlog'
+
 require_relative 'metrics_collection'
 
 module BM

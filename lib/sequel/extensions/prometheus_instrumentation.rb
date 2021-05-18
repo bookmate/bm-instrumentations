@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'prometheus/client'
 require 'bm/instrumentations'
 require 'bm/instrumentations/sequel/metrics_collection'
 

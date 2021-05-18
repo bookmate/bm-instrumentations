@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'prometheus/client'
-
 RSpec.configure do |config|
   config.include(Module.new do
     def self.included(base)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rack'
-require 'prometheus/client'
 
 require_relative 'endpoint'
 require_relative 'metrics_collection'
