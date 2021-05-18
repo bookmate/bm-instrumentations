@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- __Breaking__ `BM::Instrumentations::Aws::Collector` should be used as `BM::Instrumentations::Aws.plugin`
+- __Breaking__ The class `BM::Instrumentations::Aws::Collector` turned into gem private,
+  the method `BM::Instrumentations::Aws.plugin` should be use to include the plugin
+- __Breaking__ The class `BM::Instrumentations::Management::Server` turned into gem private,
+  the method `BM::Instrumentations::Management.server` should be use to create a server
 
 ### Removed
 

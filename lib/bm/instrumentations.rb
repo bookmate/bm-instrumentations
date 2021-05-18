@@ -10,6 +10,7 @@ module BM
     autoload :Timings,        'bm/instrumentations/timings'
 
     autoload :Aws,            'bm/instrumentations/aws/collector'
+    autoload :Management,     'bm/instrumentations/management/server'
 
     module Rack
       autoload :Collector,         'bm/instrumentations/rack/collector'
@@ -19,15 +20,6 @@ module BM
 
     module Sequel
       autoload :MetricsCollection, 'bm/instrumentations/sequel/metrics_collection'
-    end
-
-    module Management
-      autoload :Server,            'bm/instrumentations/management/server'
-    end
-
-    module Puma
-      autoload :Collector,         'bm/instrumentations/puma/collector'
-      autoload :MetricsCollection, 'bm/instrumentations/puma/metrics_collection'
     end
   end
 end

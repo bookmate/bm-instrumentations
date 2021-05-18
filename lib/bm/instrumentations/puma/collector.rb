@@ -4,6 +4,7 @@ require 'socket'
 require 'puma'
 require 'prometheus/client'
 require 'tcp_server_socket_backlog/tcp_server_socket_backlog'
+require_relative 'metrics_collection'
 
 module BM
   module Instrumentations
@@ -11,6 +12,8 @@ module BM
       # @attr [MetricsCollection] metrics_collection
       # @attr [Puma::Launcher] launcher
       # @attr [Boolean] is_socket_backlog
+      #
+      # @api private
       class Collector
         attr_reader :metrics_collection, :launcher, :is_socket_backlog
 
