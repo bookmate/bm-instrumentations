@@ -10,7 +10,7 @@ Rack, S3, Roda and etc.
 * [Installation](#installation)
 * [Rack Metrics Collector](#rack-metrics-collector)
 * [Sequel Metrics Collector](#sequel-metrics-collector)
-* [AWS Client Metrics Collector](#aws-client-metrics-collector)
+* [AWS Client Metrics](#aws-client-metrics)
 * [Ruby Method Metrics Collector](#ruby-methods-metrics-collector)
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
 * [Management Server Puma plugin](#management-server-puma-plugin)
@@ -102,17 +102,17 @@ db.extension(:prometheus_instrumentation)
 
 <hr>
 
-## AWS Client Metrics Collector
+## AWS Client Metrics
 
-`BM::Instrumentations::Aws::Collector` is an AWS client plugin that instrument API calls and write metrics into 
+`BM::Instrumentations::Aws.plugin` is an AWS client plugin that instrument API calls and write metrics into 
 Prometheus.
 
 ```ruby
 require 'bm/instrumentations'
 
 # Apply a plugin
-Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
-Aws::S3::Client.new(options)
+Aws::S3::Client.add_plugin(BM::Instrumentations::Aws.plugin)
+s3_client = Aws::S3::Client.new(options)
 ```
 
 #### Collected metrics

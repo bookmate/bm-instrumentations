@@ -9,10 +9,7 @@ module BM
     autoload :Stopwatch,      'bm/instrumentations/internal/stopwatch'
     autoload :Timings,        'bm/instrumentations/timings'
 
-    module Aws
-      autoload :Collector,         'bm/instrumentations/aws/collector'
-      autoload :MetricsCollection, 'bm/instrumentations/aws/metrics_collection'
-    end
+    autoload :Aws,            'bm/instrumentations/aws/collector'
 
     module Rack
       autoload :Collector,         'bm/instrumentations/rack/collector'

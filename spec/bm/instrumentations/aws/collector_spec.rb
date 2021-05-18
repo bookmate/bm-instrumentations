@@ -4,7 +4,7 @@ require 'aws-sdk-s3'
 require 'bm/instrumentations'
 
 RSpec.describe BM::Instrumentations::Aws::Collector do
-  subject(:collector) { described_class[registry] }
+  subject(:collector) { BM::Instrumentations::Aws.plugin(registry) }
 
   let(:access_key_id) { ENV.fetch('AWS_ACCESS_KEY_ID', 'AccessKey') }
   let(:secret_key) { ENV.fetch('AWS_SECRET_KEY', 'SecretKey') }
@@ -29,7 +29,7 @@ RSpec.describe BM::Instrumentations::Aws::Collector do
   end
 
   context 'when registered twice' do
-    subject(:second_collector) { described_class[registry] }
+    subject(:second_collector) { BM::Instrumentations::Aws.plugin(registry) }
 
     it 'shares same metrics' do
       expect(second_collector.metrics_collection.request_duration_seconds).to \

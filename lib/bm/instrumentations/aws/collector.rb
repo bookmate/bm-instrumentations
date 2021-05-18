@@ -2,31 +2,41 @@
 
 require 'prometheus/client'
 
+require_relative 'metrics_collection'
+
 module BM
   module Instrumentations
+    # Aws client plugin
     module Aws
-      # Is an AWS client plugin that instrument API calls and write metrics into Prometheus
+      # AWS client plugin that instrument API calls and write metrics into Prometheus
       #
       # @example Apply a plugin
-      #   Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector)
+      #   Aws::S3::Client.add_plugin(BM::Instrumentations::Aws.plugin)
       #
       # @example Apply a plugin and override the default registry
-      #   Aws::S3::Client.add_plugin(BM::Instrumentations::Aws::Collector[registry])
+      #   Aws::S3::Client.add_plugin(BM::Instrumentations::Aws.plugin(registry))
+      #
+      # @param registry [Prometheus::Client::Registry, nil] overrides a default registry
+      # @return [Collector]
+      def self.plugin(registry)
+        metrics_collection = MetricsCollection.new(registry || Prometheus::Client.registry)
+        Collector.new(metrics_collection)
+      end
+
+      # An implementation of {Aws::ClientSideMonitoring::Publisher} that publish metrics into
+      # Prometheus registry.
       #
       # @attr [MetricsCollection] metrics_collection
+      #
       # @see Aws::ClientSideMonitoring::Publisher
+      # @api private
       class Collector
         attr_reader :metrics_collection
         attr_accessor :agent_port, :agent_host # for {Aws::ClientSideMonitoring::Publisher} compatibility
 
-        # @param registry [Prometheus::Client::Registry, nil] overrides a default registry
-        def initialize(registry = nil)
-          @metrics_collection = MetricsCollection.new(registry || Prometheus::Client.registry)
-        end
-
-        # @param registry [Prometheus::Client::Registry, nil] overrides a default registry
-        def self.[](registry)
-          new(registry)
+        # @param metrics_collection [MetricsCollection]
+        def initialize(metrics_collection)
+          @metrics_collection = metrics_collection
         end
 
         # AWS plugin hook, configures a client side monitoring

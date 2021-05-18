@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- __Breaking__ `BM::Instrumentations::Aws::Collector` should be used as `BM::Instrumentations::Aws.plugin`
+
 ### Removed
 
 ### Fixed
