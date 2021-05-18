@@ -8,7 +8,7 @@ Provides Prometheus metrics collectors and integrations for Sequel,
 Rack, S3, Roda and etc.
 
 * [Installation](#installation)
-* [Rack Metrics Collector](#rack-metrics-collector)
+* [Rack Metrics](#rack-metrics)
 * [Sequel Metrics Collector](#sequel-metrics-collector)
 * [AWS Client Metrics](#aws-client-metrics)
 * [Ruby Method Metrics Collector](#ruby-methods-metrics-collector)
@@ -39,15 +39,15 @@ $ gem install bm-instrumentations
 
 <hr>
 
-## Rack Metrics Collector
+## Rack Metrics
 
-`Sequel::Extensions::PrometheusInstrumentation` is a Rack middleware that collect metrics for HTTP request and 
+`BM::Instrumentations::Rack` is a Rack middleware that collect metrics for HTTP request and 
 responses.
 
 ```ruby
 # config.ru
 require 'bm/instrumentations'
-use BM::Instrumentations::Rack::Collector, exclude_path: %w[/metrics /ping]
+use BM::Instrumentations::Rack, exclude_path: %w[/metrics /ping]
 ```
 
 The middleware has some optional parameters:

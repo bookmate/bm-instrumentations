@@ -2,7 +2,7 @@
 
 require 'bm/instrumentations'
 
-RSpec.describe BM::Instrumentations::Rack::Collector, rack: true do
+RSpec.describe BM::Instrumentations::Rack, rack: true do
   subject(:app) do
     described_class.new(callable, exclude_path: exclude_path, registry: registry)
   end
