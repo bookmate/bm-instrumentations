@@ -3,6 +3,8 @@
 module BM
   module Instrumentations
     module RubyVM
+      # A collection of Prometheus metrics for Ruby VM & GC
+      #
       # @attr [Prometheus::Client::Summary] gc_time_seconds
       # @attr [Prometheus::Client::Gauge] gc_heap_slots_size
       # @attr [Prometheus::Client::Gauge] gc_allocated_objects_total
@@ -16,6 +18,7 @@ module BM
         attr_reader :gc_time_seconds, :gc_heap_slots_size, :gc_allocated_objects_total,
                     :gc_freed_objects_total, :gc_counts_total, :vm_global_cache_state, :threads_count
 
+        # @param registry [Prometheus::Client::Registry]
         def initialize(registry)
           build_version(registry)
           build_gc_time_seconds(registry)

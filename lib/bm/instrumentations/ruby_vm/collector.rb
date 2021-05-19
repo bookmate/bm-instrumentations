@@ -10,6 +10,7 @@ module BM
       # Collects Ruby VM and GC metrics
       #
       # @attr [MetricsCollection] metrics_collection
+      # @api private
       class Collector
         attr_reader :metrics_collection
 
@@ -21,7 +22,6 @@ module BM
         MAJOR_GC_COUNT = { labels: { counts: 'major' } }.freeze
 
         # @param registry [Prometheus::Client::Registry]
-        # @api private
         def initialize(registry)
           @metrics_collection = MetricsCollection.new(registry)
         end
