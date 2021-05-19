@@ -56,8 +56,8 @@ module BM
           @gc_heap_slots_size = register_metric(registry, :ruby_gc_heap_slots_size) do |name|
             registry.gauge(
               name,
-              docstring: 'The size of available heap slots of Ruby GC partitioned by type',
-              labels: %i[slot_type]
+              docstring: 'The size of available heap slots of Ruby GC partitioned by slots type',
+              labels: %i[slots]
             )
           end
         end
@@ -87,8 +87,8 @@ module BM
           @gc_counts_total = register_metric(registry, :ruby_gc_counts_total) do |name|
             registry.gauge(
               name,
-              docstring: 'The total number of Ruby GC counts partitioned by type',
-              labels: %i[count_type]
+              docstring: 'The total number of Ruby GC counts partitioned by counts type',
+              labels: %i[counts]
             )
           end
         end
@@ -98,8 +98,9 @@ module BM
           @vm_global_cache_state = register_metric(registry, :ruby_vm_global_cache_state) do |name|
             registry.gauge(
               name,
-              docstring: 'The Ruby VM global cache state (version) for methods and constants, partitioned by type',
-              labels: %i[cache_type]
+              docstring: 'The Ruby VM global cache state (version) for methods and constants,' \
+                         ' partitioned by cache type',
+              labels: %i[cache]
             )
           end
         end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../internal/prometheus_registry_custom_collectors'
 require_relative 'metrics_collection'
 
 module BM
@@ -16,6 +17,8 @@ module BM
         SLOTS_LIVE = { labels: { slots: 'live' } }.freeze
         CACHE_METHOD = { labels: { cache: 'method' } }.freeze
         CACHE_CONSTANT = { labels: { cache: 'constant' } }.freeze
+        MINOR_GC_COUNT = { labels: { counts: 'minor' } }.freeze
+        MAJOR_GC_COUNT = { labels: { counts: 'major' } }.freeze
 
         # @param registry [Prometheus::Client::Registry]
         # @api private
@@ -43,11 +46,15 @@ module BM
         # @option gc_stats [Integer] :heap_live_slots
         # @option gc_stats [Integer] :total_allocated_objects
         # @option gc_stats [Integer] :total_freed_objects
-        def update_gc_stats(gc_stats)
+        # @option gc_stats [Integer] :minor_gc_count
+        # @option gc_stats [Integer] :major_gc_count
+        def update_gc_stats(gc_stats) # rubocop:disable Metrics/AbcSize
           metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_free_slots], SLOTS_FREE)
           metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_live_slots], SLOTS_LIVE)
           metrics_collection.gc_allocated_objects_total.set(gc_stats[:total_allocated_objects])
           metrics_collection.gc_freed_objects_total.set(gc_stats[:total_freed_objects])
+          metrics_collection.gc_counts_total.set(gc_stats[:minor_gc_count], MINOR_GC_COUNT)
+          metrics_collection.gc_counts_total.set(gc_stats[:major_gc_count], MAJOR_GC_COUNT)
         end
 
         # @param vm_stats [Hash<Symbol, Integer>]
@@ -72,10 +79,10 @@ module BM
         end
       end
 
-      # @param registry [Prometheus::Client::Registry]
-      # @param enable_gc_profiler [Boolean]
+      # @param registry [Prometheus::Client::Registry] overrides the default registry
+      # @param enable_gc_profiler [Boolean] turn on {GC::Profiler}
       # @return [void]
-      def self.install(registry = nil, enable_gc_profiler: false)
+      def self.install(registry = nil, enable_gc_profiler: true)
         ::GC::Profiler.enable if enable_gc_profiler
 
         registry ||= Prometheus::Client.registry
