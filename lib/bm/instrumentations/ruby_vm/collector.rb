@@ -49,12 +49,12 @@ module BM
         # @option gc_stats [Integer] :minor_gc_count
         # @option gc_stats [Integer] :major_gc_count
         def update_gc_stats(gc_stats) # rubocop:disable Metrics/AbcSize
-          metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_free_slots], SLOTS_FREE)
-          metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_live_slots], SLOTS_LIVE)
+          metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_free_slots], **SLOTS_FREE)
+          metrics_collection.gc_heap_slots_size.set(gc_stats[:heap_live_slots], **SLOTS_LIVE)
           metrics_collection.gc_allocated_objects_total.set(gc_stats[:total_allocated_objects])
           metrics_collection.gc_freed_objects_total.set(gc_stats[:total_freed_objects])
-          metrics_collection.gc_counts_total.set(gc_stats[:minor_gc_count], MINOR_GC_COUNT)
-          metrics_collection.gc_counts_total.set(gc_stats[:major_gc_count], MAJOR_GC_COUNT)
+          metrics_collection.gc_counts_total.set(gc_stats[:minor_gc_count], **MINOR_GC_COUNT)
+          metrics_collection.gc_counts_total.set(gc_stats[:major_gc_count], **MAJOR_GC_COUNT)
         end
 
         # @param vm_stats [Hash<Symbol, Integer>]
@@ -63,8 +63,8 @@ module BM
         def update_global_cache(vm_stats)
           return unless %i[global_method_state global_constant_state].all? { vm_stats.include?(_1) }
 
-          metrics_collection.vm_global_cache_state.set(vm_stats[:global_method_state], CACHE_METHOD)
-          metrics_collection.vm_global_cache_state.set(vm_stats[:global_constant_state], CACHE_CONSTANT)
+          metrics_collection.vm_global_cache_state.set(vm_stats[:global_method_state], **CACHE_METHOD)
+          metrics_collection.vm_global_cache_state.set(vm_stats[:global_constant_state], **CACHE_CONSTANT)
         end
 
         # Records {GC::Profiler.total_time} if it's enabled
