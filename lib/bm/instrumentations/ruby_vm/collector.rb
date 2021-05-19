@@ -62,18 +62,11 @@ module BM
         # @option vm_stats [Integer] :global_constant_state
         def update_global_cache(vm_stats)
           if vm_stats[:global_method_state]
-            metrics_collection.vm_global_cache_state.set(
-              vm_stats[:global_method_state],
-              **CACHE_METHOD
-            )
+            metrics_collection.vm_global_cache_state.set(vm_stats[:global_method_state], **CACHE_METHOD)
           end
+          return unless vm_stats[:global_constant_state]
 
-          if vm_stats[:global_constant_state]
-            metrics_collection.vm_global_cache_state.set(
-              vm_stats[:global_constant_state],
-              **CACHE_CONSTANT
-            )
-          end
+          metrics_collection.vm_global_cache_state.set(vm_stats[:global_constant_state], **CACHE_CONSTANT)
         end
 
         # Records {GC::Profiler.total_time} if it's enabled
