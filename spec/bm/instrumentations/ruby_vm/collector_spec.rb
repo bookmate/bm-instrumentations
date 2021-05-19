@@ -48,8 +48,13 @@ RSpec.describe BM::Instrumentations::RubyVM::Collector do
       expect(gauge_value(:ruby_gc_counts_total, counts: 'major')).to be_positive
     end
 
-    it 'increments a :ruby_vm_global_cache_state gauge' do
+    it 'increments a :ruby_vm_global_cache_state gauge', 'with method' do
+      skip('Not for ruby3') if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.0.0')
+
       expect(gauge_value(:ruby_vm_global_cache_state, cache: 'method')).to be_positive
+    end
+
+    it 'increments a :ruby_vm_global_cache_state gauge', 'with constant' do
       expect(gauge_value(:ruby_vm_global_cache_state, cache: 'constant')).to be_positive
     end
 
