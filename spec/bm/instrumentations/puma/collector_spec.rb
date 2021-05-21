@@ -4,8 +4,6 @@ require 'bm/instrumentations'
 require 'bm/instrumentations/puma/collector'
 
 RSpec.describe BM::Instrumentations::Puma::Collector do
-  subject(:collector) { described_class.new(registry: registry, launcher: launcher) }
-
   let(:launcher) { instance_double('Puma::Launcher') }
   let(:stats) do
     {
@@ -15,28 +13,29 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
       pool_capacity: 5
     }
   end
-  let(:listener) { TCPServer.new('127.0.0.1', 0) }
-  let(:client) { TCPSocket.new('127.0.0.1', listener.addr[1]) }
+
+  let(:update) { registry.custom_collectors! }
+  let(:tcp_server) { TCPServer.new(0).tap { _1.listen(12) } }
 
   before do
+    described_class.install(launcher, registry: registry)
+
     binder = instance_double('Puma::Binder')
     allow(launcher).to receive(:stats).and_return(stats)
     allow(launcher).to receive(:binder).and_return(binder)
-    allow(binder).to receive(:ios).and_return([listener])
+    allow(binder).to receive(:ios).and_return([tcp_server])
   end
 
-  after { [client, listener].each(&:close) }
+  after { tcp_server.close }
 
   it 'assigns the Puma server version' do
-    collector
+    update
 
     expect(gauge_value(:puma_server_version, version: Puma::Server::VERSION)).to eq(1.0)
   end
 
   describe '#update', 'with launcher stats' do
-    before do
-      collector.update
-    end
+    before { update }
 
     it 'fetches stats from launcher' do
       expect(launcher).to have_received(:stats)
@@ -59,18 +58,21 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
     end
   end
 
-  describe '#update', 'with socket backlog' do
+  describe '#update', 'with socket backlog' do # rubocop:disable RSpec/MultipleMemoizedHelpers
     let(:labels) { { listener: 0 } }
+    let(:client) { TCPSocket.new('127.0.0.1', tcp_server.addr[1]) }
 
     before do
-      skip('TCP_INFO is Linux only') unless TCPServer.method_defined?(:socket_backlog)
+      skip('TCP_INFO is Linux only') unless BM::Instrumentations::Puma::TcpInfo.new.available?
 
       client
-      collector.update
+      update
     end
 
+    after { client.close }
+
     it 'updates :puma_server_socket_backlog_max_size gauge' do
-      expect(gauge_value(:puma_server_socket_backlog_max_size, labels)).to be_positive
+      expect(gauge_value(:puma_server_socket_backlog_max_size, labels)).to eq(12.0)
     end
 
     it 'updates :puma_server_socket_backlog_size gauge' do
