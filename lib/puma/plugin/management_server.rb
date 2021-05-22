@@ -3,7 +3,6 @@
 require 'puma/dsl'
 require 'puma/plugin'
 require 'bm/instrumentations'
-require 'bm/instrumentations/puma/collector'
 
 module BM
   module Instrumentations
@@ -47,7 +46,7 @@ Puma::Plugin.create do
     # @type [Puma::Events]
     events = launcher.events
     server = BM::Instrumentations::Management.server(**args)
-    BM::Instrumentations::Puma::Collector.install(launcher, registry: args[:registry])
+    BM::Instrumentations::Puma.install(launcher, registry: args[:registry])
 
     events.on_booted do
       running = server.run

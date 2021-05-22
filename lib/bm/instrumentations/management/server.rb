@@ -4,7 +4,6 @@ require 'rack'
 require 'logger'
 require 'puma'
 require 'prometheus/client/formats/text'
-require 'bm/instrumentations/puma/collector'
 
 module BM
   module Instrumentations
@@ -181,7 +180,7 @@ module BM
 
           # @return [(Integer, Hash<String, String>, Array<String>)]
           def metrics
-            @registry.custom_collectors! if @registry.respond_to?(:custom_collectors!)
+            @registry.update_custom_collectors if @registry.respond_to?(:update_custom_collectors)
 
             text = Prometheus::Client::Formats::Text.marshal(@registry)
             [200, METRICS_TEXT, [text]]
