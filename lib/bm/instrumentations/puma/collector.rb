@@ -13,7 +13,10 @@ module BM
     # It it a custom collector that poll metrics periodically and currently working only if the
     # management server is used.
     module Puma
-      # Puma metrics collector, collects thread pool stats and optionally socket backlog stats
+      # Puma metrics collector, collects thread pool stats and optionally socket backlog stats.
+      #
+      # It it a custom collector that poll metrics periodically and currently working only if the
+      # management server is used.
       #
       # @attr [MetricsCollection] metrics_collection
       # @attr [Puma::Launcher] launcher

@@ -7,7 +7,13 @@ module BM
   module Instrumentations
     # Collects Ruby VM and GC metrics
     module RubyVM
-      # Collects Ruby VM and GC metrics
+      # Collects Ruby VM and GC stats and write to Prometheus.
+      #
+      # It it a custom collector that poll metrics periodically and currently working only if the
+      # management server is used.
+      #
+      # @example Usage
+      #   BM::Instrumentations::Ruby.install
       #
       # @attr [MetricsCollection] metrics_collection
       # @api private
