@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - __Breaking__ The middleware `BM::Instrumentations::Rack::Collector` renamed to 
   `BM::Instrumentations::Rack`
 
+### Removed
+
+- C extension `tcp_server_socket_backlog` was removed in favour of the plain Ruby method `getsockopt`
+
 ## [0.1.1] - 2021-05-14
 
 ### Added

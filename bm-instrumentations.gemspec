@@ -35,7 +35,6 @@ Gem::Specification.new do |spec|
   end
 
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.extensions    = %w[ext/tcp_server_socket_backlog/extconf.rb]
   spec.require_paths = %w[lib]
 
   spec.add_dependency 'prometheus-client', '~> 2.1'
