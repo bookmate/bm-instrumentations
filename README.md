@@ -255,7 +255,11 @@ with `BM::Instrumentations::Management::Server` together.
 ```ruby
 require 'bm/instrumentations'
 
+# It installs a custom collector to the default prometheus registry
 BM::Instrumentations::RubyVM.install
+
+# Or if you don't want to activate GC::Profiler
+BM::Instrumentations::RubyVM.install(enable_gc_profiler: false)
 ```
 
 #### Collected metrics
