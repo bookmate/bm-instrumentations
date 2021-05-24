@@ -246,7 +246,7 @@ management_server(host: '127.0.0.1', port: 9000, logger: Logger.new(IO::NULL))
 
 <hr>
 
-# Ruby VM & GC metrics
+## Ruby VM & GC metrics
 
 `BM::Instrumentation::RubyVM` is a custom metrics collector that captures ruby's VM and GC stats. Due to the official
 prometheus client for ruby isn't yet support that types of collectors, so the collectors only works
