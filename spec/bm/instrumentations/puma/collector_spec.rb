@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'bm/instrumentations'
-require 'bm/instrumentations/puma/collector'
 
 RSpec.describe BM::Instrumentations::Puma::Collector do
   let(:launcher) { instance_double('Puma::Launcher') }
@@ -14,11 +13,11 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
     }
   end
 
-  let(:update) { registry.custom_collectors! }
+  let(:update) { registry.update_custom_collectors }
   let(:tcp_server) { TCPServer.new(0).tap { _1.listen(12) } }
 
   before do
-    described_class.install(launcher, registry: registry)
+    BM::Instrumentations::Puma.install(launcher, registry: registry)
 
     binder = instance_double('Puma::Binder')
     allow(launcher).to receive(:stats).and_return(stats)

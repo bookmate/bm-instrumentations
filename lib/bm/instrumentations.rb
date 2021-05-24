@@ -4,7 +4,8 @@ require 'prometheus/client'
 require 'bm/instrumentations/version'
 
 module BM
-  # :nodoc:
+  # Provides Prometheus metrics collectors and integrations for Sequel,
+  # Rack, S3, Roda and etc.
   module Instrumentations
     autoload :RegisterMetric, 'bm/instrumentations/internal/register_metric'
     autoload :Stopwatch,      'bm/instrumentations/internal/stopwatch'
@@ -12,5 +13,6 @@ module BM
     autoload :Aws,            'bm/instrumentations/aws/collector'
     autoload :Management,     'bm/instrumentations/management/server'
     autoload :Rack,           'bm/instrumentations/rack/middleware'
+    autoload :Puma,           'bm/instrumentations/puma/collector'
   end
 end
