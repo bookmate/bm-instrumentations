@@ -13,11 +13,6 @@ module BM
     # It it a custom collector that poll metrics periodically and currently working only if the
     # management server is used.
     module Puma
-      # Puma metrics collector, collects thread pool stats and optionally socket backlog stats.
-      #
-      # It it a custom collector that poll metrics periodically and currently working only if the
-      # management server is used.
-      #
       # @attr [MetricsCollection] metrics_collection
       # @attr [Puma::Launcher] launcher
       # @attr [TcpInfo] tcp_info
@@ -52,10 +47,11 @@ module BM
         end
       end
 
-      # Puma metrics collector, collects thread pool stats and optionally socket backlog stats
+      # Installs a custom collector into {Prometheus::Registry}
       #
       # @param launcher [Puma::Launcher]
       # @param registry [Prometheus::Client::Registry, nil]
+      # @return [void]
       def self.install(launcher, registry: nil)
         registry ||= Prometheus::Client.registry
         registry.add_custom_collector(&Collector.new(registry: registry, launcher: launcher))
