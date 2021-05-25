@@ -9,15 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Ability to use custom metric collectors
+- Add ability to use custom metric collectors
+- Add a custom collector for Ruby VM & GC stats
 
 ### Changed
 
-- __Breaking__ The class `BM::Instrumentations::Aws::Collector` turned into gem private,
+- __BREAKING__ The class `BM::Instrumentations::Aws::Collector` turned into gem private,
   the method `BM::Instrumentations::Aws.plugin` should be use to include the plugin
-- __Breaking__ The class `BM::Instrumentations::Management::Server` turned into gem private,
+- __BREAKING__ The class `BM::Instrumentations::Management::Server` turned into gem private,
   the method `BM::Instrumentations::Management.server` should be use to create a server
-- __Breaking__ The middleware `BM::Instrumentations::Rack::Collector` renamed to 
+- __BREAKING__ The middleware `BM::Instrumentations::Rack::Collector` renamed to 
   `BM::Instrumentations::Rack`
 
 ### Removed

@@ -14,6 +14,7 @@ Rack, S3, Roda and etc.
 * [Ruby Method Metrics](#ruby-methods-metrics)
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
 * [Management Server Puma plugin](#management-server-puma-plugin)
+* [Ruby VM & GC Metrics](#ruby-vm--gc-metrics)
 
 <hr>
 
@@ -175,7 +176,7 @@ end
 
 <hr>
 
-# Endpoint Name Roda plugin
+## Endpoint Name Roda plugin
 
 The `endpoint` plugin adds an endpoint name to the Rack's request env.
 
@@ -209,7 +210,7 @@ end
 
 <hr>
 
-# Management Server Puma plugin
+## Management Server Puma plugin
 
 The `management_server` plugin provides monitoring and metrics on different HTTP port, it starts a separated
 `Puma::Server` that serves requests.
@@ -242,6 +243,37 @@ management_server(host: '127.0.0.1', port: 9000, logger: Logger.new(IO::NULL))
 | `puma_thread_pool_queue_size` | gauge | - | The number of queued requests that waiting execution in the Puma server |
 | `puma_server_socket_backlog_size` | gauge | `listener` | __Linux only__<br>The current size of the pending connection queue of the Puma listener | 
 | `puma_server_socket_backlog_max_size` | gauge | `listener` | __Linux only__<br>The preconfigured maximum size of the pending connections queue of the Puma listener |
+
+<hr>
+
+## Ruby VM & GC metrics
+
+`BM::Instrumentation::RubyVM` is a custom metrics collector that captures ruby's VM and GC stats. Due to the official
+prometheus client for ruby isn't yet support that types of collectors, so the collectors only works
+with `BM::Instrumentations::Management::Server` together.
+
+```ruby
+require 'bm/instrumentations'
+
+# It installs a custom collector to the default prometheus registry
+BM::Instrumentations::RubyVM.install
+
+# Or if you don't want to activate GC::Profiler
+BM::Instrumentations::RubyVM.install(enable_gc_profiler: false)
+```
+
+#### Collected metrics
+
+| Metrics | Type | Labels | Description |
+|---------|------|--------|-------------|
+| `ruby_version` | gauge | `ruby`<br>`version` | The current ruby engine name and version |
+| `ruby_gc_time_seconds` | summary | | The total time that Ruby GC spends for garbage collection in seconds |
+| `ruby_gc_heap_slots_size` | gauge | `slots` | The size of available heap slots of Ruby GC partitioned by slots type (`free` or `live`) |
+| `ruby_gc_allocated_objects_total` | gauge | | The total number of allocated objects by Ruby GC |
+| `ruby_gc_freed_objects_total` | gauge | | The total number of freed objects by Ruby GC |
+| `ruby_gc_counts_total` | gauge | `counts` | The total number of Ruby GC counts partitioned by counts type (`minor` or `major`) |
+| `ruby_vm_global_cache_state` | gauge | `cache` | The Ruby VM global cache state (version) for methods and constants, partitioned by cache type (`method` or `constant`) |
+| `ruby_threads_count` | gauge | | The number of running threads |
 
 # License
 
