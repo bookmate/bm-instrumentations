@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2021-05-26
+
 ### Added
 
 - Add ability to use custom metric collectors
@@ -18,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the method `BM::Instrumentations::Aws.plugin` should be use to include the plugin
 - __BREAKING__ The class `BM::Instrumentations::Management::Server` turned into gem private,
   the method `BM::Instrumentations::Management.server` should be use to create a server
-- __BREAKING__ The middleware `BM::Instrumentations::Rack::Collector` renamed to 
+- __BREAKING__ The middleware `BM::Instrumentations::Rack::Collector` renamed to
   `BM::Instrumentations::Rack`
 
 ### Removed
@@ -37,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - initial release
 
-[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.0...v1.0.0
 [0.1.1]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bookmate/bm-instrumentations/releases/tag/v0.1.0
