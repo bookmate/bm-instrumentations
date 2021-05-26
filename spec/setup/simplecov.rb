@@ -15,6 +15,7 @@ unless ENV.fetch('SIMPLECOV', '').empty?
 
   SimpleCov.start do
     add_filter '/spec/'
+    add_filter '/lib/bm/instrumentations/version.rb'
     track_files 'lib/**/*.rb'
   end
 end
