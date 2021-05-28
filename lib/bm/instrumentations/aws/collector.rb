@@ -16,7 +16,7 @@ module BM
       #
       # @param registry [Prometheus::Client::Registry, nil] overrides a default registry
       # @return [Collector]
-      def self.plugin(registry)
+      def self.plugin(registry = nil)
         metrics_collection = MetricsCollection.new(registry || Prometheus::Client.registry)
         Collector.new(metrics_collection)
       end
