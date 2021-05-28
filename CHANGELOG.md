@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `BM::instruentations::Aws.plugin` argument `registry` have to be optional
+
 ## [1.0.0] - 2021-05-26
 
 ### Added
