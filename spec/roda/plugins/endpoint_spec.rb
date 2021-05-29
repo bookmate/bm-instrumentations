@@ -57,4 +57,28 @@ RSpec.describe 'Roda::RodaPlugins::Endpoint', rack: true do
     expect(last_response.body).to eq('root')
     expect(last_response['X-Endpoint']).to eq('RodaAppTest/root')
   end
+
+  context 'with overridden application name' do
+    let(:api) do
+      Class.new(::Roda) do
+        plugin(:endpoint, name: 'OverriddenAppName')
+
+        def root
+          'root'
+        end
+        endpoint :root
+
+        route do |r|
+          r.root { root }
+        end
+      end
+    end
+
+    it 'sets endpoint name to Rack env' do
+      get '/'
+      expect(last_response).to be_ok
+      expect(last_response.body).to eq('root')
+      expect(last_response['X-Endpoint']).to eq('OverriddenAppName/root')
+    end
+  end
 end

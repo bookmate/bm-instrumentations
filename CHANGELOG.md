@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to override an application name in `endpoint` Roda plugin, by default
+  it picks up from a `class.name`
+
 ### Fixed
 
 - `BM::instruentations::Aws.plugin` argument `registry` have to be optional

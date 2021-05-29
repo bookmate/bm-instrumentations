@@ -25,8 +25,10 @@ class Roda
     #     end
     #   end
     module Endpoint
-      # @param app [Any]
-      def self.configure(app)
+      # @param app [Roda] the Roda application
+      # @param name [String] override the class name of the Roda application
+      def self.configure(app, name: nil)
+        app.opts[:endpoint_class_name] = name || app.name
         app.extend ClassMethods
       end
 
@@ -34,7 +36,7 @@ class Roda
       module ClassMethods
         # @param method_name [Symbol]
         def endpoint(method_name)
-          endpoint_name = "#{name}/#{method_name}"
+          endpoint_name = "#{opts[:endpoint_class_name]}/#{method_name}"
           prepend(Module.new do
             define_method(method_name) do |*args, **kwargs, &block|
               request.env[BM::Instrumentations::Rack::ENDPOINT] = endpoint_name
