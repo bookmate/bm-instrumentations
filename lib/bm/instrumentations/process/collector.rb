@@ -7,7 +7,7 @@ require_relative 'metrics_collection'
 
 module BM
   module Instrumentations
-    # Collects process RSS memory and the number of open file descriptors
+    # Collects process' RSS memory and the number of open files
     module Process
       # @api private
       module LinuxCollector
@@ -23,7 +23,7 @@ module BM
         end
       end
 
-      # Collects process RSS memory and the number of open file descriptors
+      # Collects process' RSS memory and the number of open files
       #
       # It it a custom collector that poll metrics periodically and currently working only if the
       # management server is used.

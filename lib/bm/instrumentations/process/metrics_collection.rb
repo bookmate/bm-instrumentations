@@ -3,7 +3,7 @@
 module BM
   module Instrumentations
     module Process
-      # A collection of Prometheus metrics for Ruby VM & GC
+      # A collection of Prometheus metrics for system process
       #
       # @attr [Prometheus::Client::Gauge] process_rss_memory_bytes_count
       # @attr [Prometheus::Client::Gauge] process_open_fds_count
@@ -35,7 +35,7 @@ module BM
           @process_open_fds_count = register_metric(registry, :process_open_fds_count) do |name|
             registry.gauge(
               name,
-              docstring: 'The total number of open file descriptor of this process'
+              docstring: 'The number of open files by this process'
             )
           end
         end

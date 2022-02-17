@@ -5,7 +5,7 @@ module BM
     module Process
       # :nodoc:
       module Linux
-        # Returns the number of open file descriptors for the current process
+        # Returns the number of open files by the current process
         #
         # @api private
         # @attr [String] status_file
@@ -18,7 +18,7 @@ module BM
             @fd_dir = fd_dir || "/proc/#{::Process.pid}/fd"
           end
 
-          # Returns the number of open file descriptors for the current process
+          # Returns the number of open files by the current process
           #
           # @return [Integer]
           def count
