@@ -1,0 +1,48 @@
+Name:	ruby
+Umask:	0002
+State:	S (sleeping)
+Tgid:	8885
+Ngid:	8885
+Pid:	8885
+PPid:	1
+TracerPid:	0
+Uid:	222	222	222	222
+Gid:	222	222	222	222
+FDSize:	512
+Groups:	50 99 222 
+VmPeak:	 2082548 kB
+VmSize:	 2082544 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	 1064052 kB
+VmRSS:	 1064052 kB
+RssAnon:	 1048096 kB
+RssFile:	   15952 kB
+RssShmem:	       4 kB
+VmData:	 1707968 kB
+VmStk:	    8188 kB
+VmExe:	    3152 kB
+VmLib:	   30472 kB
+VmPTE:	    2804 kB
+VmSwap:	      12 kB
+Threads:	10
+SigQ:	34/514781
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	00000001ca316e4f
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000001fffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Speculation_Store_Bypass:	thread vulnerable
+Cpus_allowed:	ffffffff
+Cpus_allowed_list:	0-31
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000003
+Mems_allowed_list:	0-1
+voluntary_ctxt_switches:	10233
+nonvoluntary_ctxt_switches:	316

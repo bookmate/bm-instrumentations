@@ -2,6 +2,7 @@
 
 require_relative '../internal/prometheus_registry_custom_collectors'
 require_relative 'metrics_collection'
+require_relative 'linux/proc_status'
 
 module BM
   module Instrumentations

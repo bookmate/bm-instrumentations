@@ -14,6 +14,7 @@ module BM
     autoload :Management,     'bm/instrumentations/management/server'
     autoload :Rack,           'bm/instrumentations/rack/middleware'
     autoload :RubyVM,         'bm/instrumentations/ruby_vm/collector'
+    autoload :Process,        'bm/instrumentations/process/collector'
     autoload :Puma,           'bm/instrumentations/puma/collector'
   end
 end
