@@ -11,7 +11,6 @@ RSpec.describe BM::Instrumentations::Process::Linux::ProcFD do
     subject(:count) { proc_fd.count }
 
     it 'returns a number of entries' do
-      expect(proc_fd).to be_available
       expect(count).to be_positive
     end
 
@@ -23,7 +22,6 @@ RSpec.describe BM::Instrumentations::Process::Linux::ProcFD do
       end
 
       it 'returns a number of entries' do
-        expect(proc_fd).to be_available
         expect(count).to be_positive
       end
     end

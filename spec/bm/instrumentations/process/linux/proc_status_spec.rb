@@ -20,7 +20,6 @@ RSpec.describe BM::Instrumentations::Process::Linux::ProcStatus do
       end
 
       it 'returns RSS memory bytes' do
-        expect(proc_status).to be_available
         expect(rss_memory_bytes).to eq(1_089_589_248)
       end
     end

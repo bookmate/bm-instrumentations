@@ -18,13 +18,6 @@ module BM
             @fd_dir = fd_dir || "/proc/#{::Process.pid}/fd"
           end
 
-          # Checks that proc's fd directory is available
-          #
-          # @return [Boolean]
-          def available?
-            File.directory?(fd_dir)
-          end
-
           # Returns the number of open file descriptors for the current process
           #
           # @return [Integer]

@@ -21,13 +21,6 @@ module BM
             @status_file = status_file || "/proc/#{::Process.pid}/status"
           end
 
-          # Checks that proc status is available
-          #
-          # @return [Boolean]
-          def available?
-            File.readable?(status_file)
-          end
-
           # Returns the process's RSS memory in bytes or zero if unable to read
           #
           # @return [Integer]

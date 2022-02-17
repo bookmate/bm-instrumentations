@@ -14,7 +14,7 @@ module BM
       # management server is used.
       #
       # @example Usage
-      #   BM::Instrumentations::Ruby.install
+      #   BM::Instrumentations::RubyVM.install
       #
       # @attr [MetricsCollection] metrics_collection
       # @api private
