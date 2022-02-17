@@ -22,7 +22,7 @@ module BM
           #
           # @return [Integer]
           def count
-            Dir.entries(fd_dir).size
+            Dir.children(fd_dir).size
           end
         end
       end

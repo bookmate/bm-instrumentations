@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../internal/prometheus_registry_custom_collectors'
 require_relative 'linux/proc_status'
 require_relative 'linux/proc_fd'
 require_relative 'metrics_collection'
@@ -35,7 +36,7 @@ module BM
       # @attr [Linux::ProcFD] linux_proc_fd
       # @api private
       class Collector
-        include LinuxCollector if RUBY_PLATFORM.include?('linux')
+        prepend LinuxCollector if RUBY_PLATFORM.include?('linux')
 
         attr_reader :metrics_collection, :linux_proc_status, :linux_proc_fd
 
