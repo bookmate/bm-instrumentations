@@ -68,7 +68,6 @@ RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
     it 'responds successfully' do
       expect(response).to be_ok.have_content_type('application/json')
       expect(response).to have_body(__FILE__)
-      expect(response).to have_body('"name":"puma threadpool 001"')
       expect(response).to have_body('"name":"puma management-server"')
     end
 

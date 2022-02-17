@@ -19,7 +19,7 @@ gem 'simplecov', '= 0.21.1'
 
 gem 'aws-sdk-s3', '~> 1.94' # aws
 gem 'mysql2', '~> 0.5' # sequel
-gem 'puma', '~> 5.3' # management
+gem 'puma', '~> 5.4' # management
 gem 'rack', '~> 2.2' # rack
 gem 'rack-test', '~> 1.1' # rack
 gem 'roda', '~> 3.43' # roda
