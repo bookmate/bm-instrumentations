@@ -5,7 +5,7 @@ module BM
     module Process
       # :nodoc:
       module Linux
-        # Reads RSS process memory from `/proc/$$/status`
+        # Reads RSS process memory in bytes from `/proc/$$/status`
         #
         # @api private
         # @attr [String] status_file
@@ -30,7 +30,7 @@ module BM
 
           # Returns the process's RSS memory in bytes or zero if unable to read
           #
-          # @return [Integer, nil]
+          # @return [Integer]
           def rss_memory_bytes
             status = File.open(status_file, 'r') { _1.read_nonblock(4096) }
             start_at = status.index('VmRSS:')

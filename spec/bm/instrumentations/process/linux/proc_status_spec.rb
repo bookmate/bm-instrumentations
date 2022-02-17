@@ -53,7 +53,7 @@ RSpec.describe BM::Instrumentations::Process::Linux::ProcStatus do
       subject(:proc_status) { described_class.new }
 
       before do
-        skip('Linux only') unless proc_status.available?
+        skip('Linux only') unless RUBY_PLATFORM.include?('linux')
       end
 
       it 'returns the current process RSS memory bytes' do
