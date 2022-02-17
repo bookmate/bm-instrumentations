@@ -17,7 +17,7 @@ RSpec.describe BM::Instrumentations::RubyVM::Collector do
     expect(registry.get(:ruby_threads_count)).to be_kind_of(Prometheus::Client::Gauge)
   end
 
-  describe '#update' do
+  describe '#call' do
     subject(:update) do
       (1..1_000_000).to_a.each { _1 }
       GC.start

@@ -31,13 +31,8 @@ module BM
           metrics_collection.server_version(::Puma::Server::VERSION)
         end
 
-        # @return [Proc]
-        def to_proc
-          -> { update }
-        end
-
         # Updates Puma metrics in the registry
-        def update
+        def call
           metrics_collection.update_stats(launcher.stats)
           return unless tcp_info.available?
 
@@ -54,7 +49,7 @@ module BM
       # @return [void]
       def self.install(launcher, registry: nil)
         registry ||= Prometheus::Client.registry
-        registry.add_custom_collector(&Collector.new(registry: registry, launcher: launcher))
+        registry.add_custom_collector(Collector.new(registry: registry, launcher: launcher))
       end
     end
   end

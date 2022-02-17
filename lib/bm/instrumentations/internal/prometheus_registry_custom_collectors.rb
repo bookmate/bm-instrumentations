@@ -8,8 +8,8 @@ module BM
     module PrometheusRegistryCustomCollectors
       # Registers a custom collector that poll and update metrics periodically
       #
-      # @param collector [Proc]
-      def add_custom_collector(&collector)
+      # @param collector [#call]
+      def add_custom_collector(collector)
         @mutex.synchronize do
           @custom_collectors ||= []
           @custom_collectors << collector
