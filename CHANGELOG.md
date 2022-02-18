@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2022-02-18
+
 ### Added
 - `BM::Instrumentations::Process` collector to captures process' RSS memory and the number of open files
 
@@ -57,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - initial release
 
-[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.0...v1.0.1
 [1.0.1]: https://github.com/bookmate/bm-instrumentations/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.1...v1.0.0
 [0.1.1]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.0...v0.1.1
