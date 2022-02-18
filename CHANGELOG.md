@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `BM::Instrumentations::Process` collector to captures process' RSS memory and the number of open files
+
 ### Changes
 
 - Update minimum puma version to `5.4.0`

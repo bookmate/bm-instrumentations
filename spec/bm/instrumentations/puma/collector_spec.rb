@@ -33,7 +33,7 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
     expect(gauge_value(:puma_server_version, version: Puma::Server::VERSION)).to eq(1.0)
   end
 
-  describe '#update', 'with launcher stats' do
+  describe '#call', 'with launcher stats' do
     before { update }
 
     it 'fetches stats from launcher' do
@@ -57,7 +57,7 @@ RSpec.describe BM::Instrumentations::Puma::Collector do
     end
   end
 
-  describe '#update', 'with socket backlog' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+  describe '#call', 'with socket backlog' do # rubocop:disable RSpec/MultipleMemoizedHelpers
     let(:labels) { { listener: 0 } }
     let(:client) { TCPSocket.new('127.0.0.1', tcp_server.addr[1]) }
 

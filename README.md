@@ -15,6 +15,7 @@ Rack, S3, Roda and etc.
 * [Endpoint Name Roda Plugin](#endpoint-name-roda-plugin)
 * [Management Server Puma plugin](#management-server-puma-plugin)
 * [Ruby VM & GC Metrics](#ruby-vm--gc-metrics)
+* [System Process Metrics](#system-process-metrics)
 
 <hr>
 
@@ -53,18 +54,18 @@ use BM::Instrumentations::Rack, exclude_path: %w[/metrics /ping]
 
 The middleware has some optional parameters:
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-|`exclude_path` | `String`<br>`Array<String>` | a list of ignored path names, for that paths the metrics won’t be record |
-|`registry` | `Prometheus::Client::Registry` | override the default Prometheus registry |
+| Parameter      | Type                           | Description                                                              |
+|----------------|--------------------------------|--------------------------------------------------------------------------|
+| `exclude_path` | `String`<br>`Array<String>`    | a list of ignored path names, for that paths the metrics won’t be record |
+| `registry`     | `Prometheus::Client::Registry` | override the default Prometheus registry                                 |
 
 #### Collected metrics
 
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `http_server_requests_total` | counter |  `method`<br>`path`<br>`status`<br>`status_code` | the total number of HTTP requests handled by the Rack application |
-| `http_server_exceptions_total` | counter | `method`<br>`path`<br>`exception` | the total number of uncaught exceptions raised by the Rack application |
-| `http_server_request_duration_seconds` | histogram | `method`<br>`path`<br>`status`<br>`status_code` | the HTTP response times in seconds of the Rack application |
+| Metrics                                | Type      | Labels                                          | Description                                                            |
+|----------------------------------------|-----------|-------------------------------------------------|------------------------------------------------------------------------|
+| `http_server_requests_total`           | counter   | `method`<br>`path`<br>`status`<br>`status_code` | the total number of HTTP requests handled by the Rack application      |
+| `http_server_exceptions_total`         | counter   | `method`<br>`path`<br>`exception`               | the total number of uncaught exceptions raised by the Rack application |
+| `http_server_request_duration_seconds` | histogram | `method`<br>`path`<br>`status`<br>`status_code` | the HTTP response times in seconds of the Rack application             |
 
 #### Labels
 
@@ -90,10 +91,10 @@ db.extension(:prometheus_instrumentation)
 
 #### Collected metrics
 
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `sequel_queries_total` | counter | `database`<br>`query`<br>`status` | how many Sequel queries processed, partitioned by status |
-| `sequel_query_duration_seconds` | histogram | `database`<br>`status`<br>`status` | the duration in seconds that a Sequel queries spent |
+| Metrics                         | Type      | Labels                             | Description                                              |
+|---------------------------------|-----------|------------------------------------|----------------------------------------------------------|
+| `sequel_queries_total`          | counter   | `database`<br>`query`<br>`status`  | how many Sequel queries processed, partitioned by status |
+| `sequel_query_duration_seconds` | histogram | `database`<br>`status`<br>`status` | the duration in seconds that a Sequel queries spent      |
 
 #### Labels
 
@@ -118,12 +119,12 @@ s3_client = Aws::S3::Client.new(options)
 
 #### Collected metrics
  
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `aws_sdk_client_requests_total` | counter | `service`<br>`api`<br>`status` | the total number of successful or failed API calls from AWS client to AWS services |
-| `aws_sdk_client_request_duration_seconds` | histogram | `service`<br>`api`<br>`status` | the total time in seconds for the AWS Client to make a call to AWS services |
-| `aws_sdk_client_retries_total` | counter | `service`<br>`api` | the total number retries of failed API calls from AWS client to AWS services |
-| `aws_sdk_client_exceptions_total` | counter | `service`<br>`api`<br>`exception` | the total number of AWS API calls that fail |
+| Metrics                                   | Type      | Labels                            | Description                                                                  |
+|-------------------------------------------|-----------|-----------------------------------|------------------------------------------------------------------------------|
+| `aws_sdk_client_requests_total`           | counter   | `service`<br>`api`<br>`status`    | the total number of successful or failed API calls to AWS services           |
+| `aws_sdk_client_request_duration_seconds` | histogram | `service`<br>`api`<br>`status`    | the total time in seconds for the AWS Client to make a call to AWS services  |
+| `aws_sdk_client_retries_total`            | counter   | `service`<br>`api`                | the total number retries of failed API calls from AWS client to AWS services |
+| `aws_sdk_client_exceptions_total`         | counter   | `service`<br>`api`<br>`exception` | the total number of AWS API calls that fail                                  |
 
 #### Labels
 
@@ -163,10 +164,10 @@ end
    
 #### Collected metrics
 
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `<metrics_prefix>_calls_total` | counter | `class`<br>`method`<br>`status` | the total number of of successful or failed calls by ruby's method |
-| `<metrics_prefix>_call_duration_seconds` | histogram | `class`<br>`method`<br>`status` | the time in seconds which spent at ruby's method calls |
+| Metrics                                  | Type      | Labels                          | Description                                                        |
+|------------------------------------------|-----------|---------------------------------|--------------------------------------------------------------------|
+| `<metrics_prefix>_calls_total`           | counter   | `class`<br>`method`<br>`status` | the total number of of successful or failed calls by ruby's method |
+| `<metrics_prefix>_call_duration_seconds` | histogram | `class`<br>`method`<br>`status` | the time in seconds which spent at ruby's method calls             |
 
 #### Labels
 
@@ -237,13 +238,13 @@ management_server(host: '127.0.0.1', port: 9000, logger: Logger.new(IO::NULL))
 
 #### Collected metrics
 
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `puma_thread_pool_max_size` | gauge | - | The preconfigured maximum number of worker threads in the Puma server |
-| `puma_thread_pool_size` | gauge | - | The number of spawned worker threads in the Puma server |
-| `puma_thread_pool_active_size` | gauge | - | The number of worker threads that actively executing requests in the Puma server |
-| `puma_thread_pool_queue_size` | gauge | - | The number of queued requests that waiting execution in the Puma server |
-| `puma_server_socket_backlog_size` | gauge | `listener` | __Linux only__<br>The current size of the pending connection queue of the Puma listener | 
+| Metrics                               | Type  | Labels     | Description                                                                                            |
+|---------------------------------------|-------|------------|--------------------------------------------------------------------------------------------------------|
+| `puma_thread_pool_max_size`           | gauge | -          | The preconfigured maximum number of worker threads in the Puma server                                  |
+| `puma_thread_pool_size`               | gauge | -          | The number of spawned worker threads in the Puma server                                                |
+| `puma_thread_pool_active_size`        | gauge | -          | The number of worker threads that actively executing requests in the Puma server                       |
+| `puma_thread_pool_queue_size`         | gauge | -          | The number of queued requests that waiting execution in the Puma server                                |
+| `puma_server_socket_backlog_size`     | gauge | `listener` | __Linux only__<br>The current size of the pending connection queue of the Puma listener                | 
 | `puma_server_socket_backlog_max_size` | gauge | `listener` | __Linux only__<br>The preconfigured maximum size of the pending connections queue of the Puma listener |
 
 <hr>
@@ -266,16 +267,36 @@ BM::Instrumentations::RubyVM.install(enable_gc_profiler: false)
 
 #### Collected metrics
 
-| Metrics | Type | Labels | Description |
-|---------|------|--------|-------------|
-| `ruby_version` | gauge | `ruby`<br>`version` | The current ruby engine name and version |
-| `ruby_gc_time_seconds` | summary | | The total time that Ruby GC spends for garbage collection in seconds |
-| `ruby_gc_heap_slots_size` | gauge | `slots` | The size of available heap slots of Ruby GC partitioned by slots type (`free` or `live`) |
-| `ruby_gc_allocated_objects_total` | gauge | | The total number of allocated objects by Ruby GC |
-| `ruby_gc_freed_objects_total` | gauge | | The total number of freed objects by Ruby GC |
-| `ruby_gc_counts_total` | gauge | `counts` | The total number of Ruby GC counts partitioned by counts type (`minor` or `major`) |
-| `ruby_vm_global_cache_state` | gauge | `cache` | The Ruby VM global cache state (version) for methods and constants, partitioned by cache type (`method` or `constant`) |
-| `ruby_threads_count` | gauge | | The number of running threads |
+| Metrics                           | Type    | Labels              | Description                                                                                   |
+|-----------------------------------|---------|---------------------|-----------------------------------------------------------------------------------------------|
+| `ruby_version`                    | gauge   | `ruby`<br>`version` | The current ruby engine name and version                                                      |
+| `ruby_gc_time_seconds`            | summary | -                   | The total time that Ruby GC spends for garbage collection in seconds                          |
+| `ruby_gc_heap_slots_size`         | gauge   | `slots`             | The size of available heap slots of Ruby GC partitioned by slots type (`free` or `live`)      |
+| `ruby_gc_allocated_objects_total` | gauge   | -                   | The total number of allocated objects by Ruby GC                                              |
+| `ruby_gc_freed_objects_total`     | gauge   | -                   | The total number of freed objects by Ruby GC                                                  |
+| `ruby_gc_counts_total`            | gauge   | `counts`            | The total number of Ruby GC counts partitioned by counts type (`minor` or `major`)            |
+| `ruby_vm_global_cache_state`      | gauge   | `cache`             | The Ruby VM global cache state (version) for methods and constants, partitioned by cache type |
+| `ruby_threads_count`              | gauge   | -                   | The number of running threads                                                                 |
+
+## System Process Metrics
+
+`BM::Instrumentations::Process` is a custom metrics collector that captures process' RSS memory and the number of open
+files. Due to the official prometheus client for ruby isn't yet support that types of collectors, so the collectors only
+works with `BM::Instrumentations::Management::Server` together.
+
+```ruby
+require 'bm/instrumentations'
+
+# It installs a custom collector to the default prometheus registry
+BM::Instrumentations::Process.install
+```
+
+#### Collected metrics
+
+| Metrics                          | Type  | Labels | Description                                      |
+|----------------------------------|-------|--------|--------------------------------------------------|
+| `process_rss_memory_bytes_count` | gauge | -      | The number of bytes is allocated to this process |
+| `process_open_fds_count`         | gauge | -      | The number of open files by this process         |
 
 # License
 

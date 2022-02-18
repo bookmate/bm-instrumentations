@@ -13,7 +13,7 @@ module BM
       # management server is used.
       #
       # @example Usage
-      #   BM::Instrumentations::Ruby.install
+      #   BM::Instrumentations::RubyVM.install
       #
       # @attr [MetricsCollection] metrics_collection
       # @api private
@@ -33,16 +33,11 @@ module BM
         end
 
         # @return [void]
-        def update
+        def call
           update_gc_profiler_total_time if GC::Profiler.enabled?
           update_gc_stats(::GC.stat)
           update_global_cache(::RubyVM.stat)
           metrics_collection.threads_count.set(::Thread.list.size)
-        end
-
-        # @return [Proc]
-        def to_proc
-          -> { update }
         end
 
         private
@@ -94,7 +89,7 @@ module BM
         ::GC::Profiler.enable if enable_gc_profiler
 
         registry ||= Prometheus::Client.registry
-        registry.add_custom_collector(&Collector.new(registry))
+        registry.add_custom_collector(Collector.new(registry))
       end
     end
   end
