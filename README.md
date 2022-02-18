@@ -213,6 +213,8 @@ end
 
 ## Management Server Puma plugin
 
+Requires: `puma > 5.4.0`
+
 The `management_server` plugin provides monitoring and metrics on different HTTP port, it starts a separated
 `Puma::Server` that serves requests.
 

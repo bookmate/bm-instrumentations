@@ -24,6 +24,20 @@ RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
     end
   end
 
+  describe '.server' do
+    context 'when puma version is less then 5.4.0' do
+      subject(:check) { BM::Instrumentations::Management.server }
+
+      before do
+        stub_const('::Puma::Const::VERSION', '5.3.4')
+      end
+
+      it 'raises PumaVersionError' do
+        expect { check }.to raise_error(BM::Instrumentations::Management::PumaVersionError)
+      end
+    end
+  end
+
   describe 'a /ping endpoint' do
     let(:endpoint) { '/ping' }
 
@@ -68,7 +82,6 @@ RSpec.describe BM::Instrumentations::Management::Server, net_http: true do
     it 'responds successfully' do
       expect(response).to be_ok.have_content_type('application/json')
       expect(response).to have_body(__FILE__)
-      expect(response).to have_body('"name":"puma threadpool 001"')
       expect(response).to have_body('"name":"puma management-server"')
     end
 
