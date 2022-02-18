@@ -9,6 +9,9 @@ module BM
   module Instrumentations
     # :nodoc:
     module Management
+      PumaVersionError = Class.new(ArgumentError)
+      MIN_PUMA_VERSION = '5.4.0'
+
       # Creates the management server backed by {Puma::Server} then bind and listen to.
       #
       # @param port [Integer] is a port number that a server will listen to (default: `9990`)
@@ -18,12 +21,23 @@ module BM
       #
       # @return [Server]
       def self.server(port: nil, host: nil, logger: nil, registry: nil)
+        check_puma_version
+
         Server.new(
           port: port || 9990,
           host: host || '0.0.0.0',
           logger: logger || ::Logger.new($stdout, progname: Server.name),
           registry: registry || ::Prometheus::Client.registry
         )
+      end
+
+      # Ensures that the server run using puma > 5.4.0
+      #
+      # @raise [PumaVersionError]
+      def self.check_puma_version
+        return if Gem::Version.new(::Puma::Const::VERSION) >= Gem::Version.new(MIN_PUMA_VERSION)
+
+        raise PumaVersionError, "#{name} requires puma version >= #{MIN_PUMA_VERSION}"
       end
 
       # The `management_server` provides monitoring and metrics on different HTTP port, it starts a separate
@@ -198,7 +212,7 @@ module BM
           # @param value [Hash, Array]
           # @return [(Integer, Hash<String, String>, Array<String>)]
           def to_json(value)
-            body = ::Puma::JSON.generate(value)
+            body = ::Puma::JSONSerialization.generate(value)
             [200, JSON_TEXT, [body]]
           end
         end
