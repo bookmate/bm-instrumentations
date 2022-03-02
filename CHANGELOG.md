@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2022-03-02
+
+### Added
+- `BM::Instrumentations::Rack` can record custom status code from response headers
+
 ## [1.1.0] - 2022-02-18
 
 ### Added
@@ -59,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - initial release
 
-[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/bookmate/bm-instrumentations/compare/v1.1.0...v1.0.1
 [1.0.1]: https://github.com/bookmate/bm-instrumentations/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/bookmate/bm-instrumentations/compare/v0.1.1...v1.0.0

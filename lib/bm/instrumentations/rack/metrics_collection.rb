@@ -51,7 +51,7 @@ module BM
         # @param method [String] is a HTTP method from request
         # @param path [String, nil] is a HTTP path name of handled request, may be nil
         # @param stopwatch [Instrumentations::Stopwatch] is a started timer
-        # @param exception [StandardError] is an uncaught exception
+        # @param exception [Exception] is an uncaught exception
         def record_exception(method:, path:, stopwatch:, exception:)
           record_request(status_code: INTERNAL_SERVER_ERROR, method: method, path: path, stopwatch: stopwatch)
 

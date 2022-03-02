@@ -49,6 +49,24 @@ RSpec.describe BM::Instrumentations::Rack, rack: true do
     it_behaves_like 'does not increment a counter', :http_server_exceptions_total
   end
 
+  describe 'collect metrics', 'with overridden HTTP status code' do
+    let(:labels) { { status: '2xx', status_code: 205, method: 'GET', path: 'none' } }
+
+    let(:env_key) { BM::Instrumentations::Rack::STATUS_CODE_INTERNAL }
+    let(:callable) { ->(env) { [status_code, env.merge(env_key => 205), 'app'] } }
+
+    before { get '/' }
+
+    it 'is ok response' do
+      expect(last_response).to be_ok
+      expect(last_response.body).to eq('app')
+    end
+
+    it_behaves_like 'increments a counter', :http_server_requests_total
+    it_behaves_like 'fills a histogram buckets', :http_server_request_duration_seconds
+    it_behaves_like 'does not increment a counter', :http_server_exceptions_total
+  end
+
   describe 'collect metrics', 'when HTTP status code is not 200' do
     let(:status_code) { 401 }
     let(:labels) { { status: '4xx', status_code: status_code, method: 'GET', path: 'none' } }
