@@ -38,27 +38,52 @@ module BM
         stopwatch = Stopwatch.started
         return app.call(env) unless record?(env)
 
-        record(env, env[::Rack::REQUEST_METHOD], stopwatch)
+        record(env, stopwatch)
       end
 
       private
 
       # Record metrics for given request
       #
-      # @param method [String]
+      # @param env [Hash]
       # @param stopwatch [Stopwatch]
       # @return [Array]
-      def record(env, method, stopwatch)
-        app.call(env).tap do |resp|
-          metrics_collection.record_request(
-            status_code: resp.first, method: method, path: env[ENDPOINT], stopwatch: stopwatch
-          )
-        end
+      def record(env, stopwatch)
+        app.call(env).tap { record_success(env, _1, stopwatch) }
       rescue StandardError => e
-        metrics_collection.record_exception(
-          method: method, path: env[ENDPOINT], stopwatch: stopwatch, exception: e
-        )
+        record_exception(env, e, stopwatch)
         raise
+      end
+
+      # @param env [Hash]
+      # @param response [(Integer, Hash, Array)]
+      # @param stopwatch [Stopwatch]
+      def record_success(env, response, stopwatch)
+        metrics_collection.record_request(
+          status_code: status_code(response),
+          method: env[::Rack::REQUEST_METHOD],
+          path: env[ENDPOINT],
+          stopwatch: stopwatch
+        )
+      end
+
+      # @param env [Hash]
+      # @param exception [Exception]
+      # @param stopwatch [Stopwatch]
+      def record_exception(env, exception, stopwatch)
+        metrics_collection.record_exception(
+          method: env[::Rack::REQUEST_METHOD],
+          path: env[ENDPOINT],
+          stopwatch: stopwatch,
+          exception: exception
+        )
+      end
+
+      # @param response [(Integer, Hash, Array)]
+      # @return [Integer]
+      def status_code(response)
+        code = response[1][STATUS_CODE_INTERNAL].to_i
+        code.positive? ? code : response.first
       end
 
       # Is metrics will be recorded for this request
