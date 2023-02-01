@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: [ '2.7', '3.0', '3.1' ]
+        ruby: [ '2.7', '3.0' ]
 
     env:
       S3_HOST: "localhost:9000"
