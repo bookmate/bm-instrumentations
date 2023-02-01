@@ -35,7 +35,7 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
     inspect_metrics(metrics)
 
     # no treamer and ripper threads for management
-    ths = Thread.list.map(&:name).reject { _1.nil? }.select { _1.include? 'puma management-server' }.sort
+    ths = Thread.list.map(&:name).reject(&:nil?).select { _1.include? 'puma management-server' }.sort
     expect(ths).to eq(['puma management-server', 'puma management-server tp 001'])
   end
 
