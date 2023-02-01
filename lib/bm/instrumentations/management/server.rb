@@ -10,7 +10,7 @@ module BM
     # :nodoc:
     module Management
       PumaVersionError = Class.new(ArgumentError)
-      MIN_PUMA_VERSION = '5.4.0'
+      MIN_PUMA_VERSION = '6.0.2'
 
       # Creates the management server backed by {Puma::Server} then bind and listen to.
       #
@@ -87,9 +87,7 @@ module BM
         #
         # @return [Running]
         def run
-          server = ::Puma::Server.new(rack_app, ::Puma::Events.null, puma_options)
-          server.auto_trim_time = nil # disable trimming thread
-          server.reaping_time = nil # disable reaping thread
+          server = ::Puma::Server.new(rack_app, nil, puma_options)
           server.add_tcp_listener(host, port, _optimize_for_latency = true, _backlog = BACKLOG)
 
           Running.new(server, logger).tap { notify_started(_1) }
@@ -114,6 +112,8 @@ module BM
         # @return [Hash<Symbol, Any>]
         def puma_options
           {
+            auto_trim_time: nil,   # disable trimming thread
+            reaping_time: nil,     # disable reaping thread
             min_threads: THREADS,  # uses a fixed sized thread pool
             max_threads: THREADS,  #
             queue_requests: false, # disable incoming requests buffering
