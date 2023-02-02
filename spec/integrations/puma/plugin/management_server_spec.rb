@@ -22,7 +22,7 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
 
   after { puma.stop }
 
-  it 'starts puma and management server' do
+  it 'starts puma and management server and capture metrics' do
     [puma_port, management_port].each { wait_for(_1) }
 
     hello = Net::HTTP.get_response(URI("http://#{host}:#{puma_port}"))
@@ -33,6 +33,10 @@ RSpec.describe 'Puma::Plugin::ManagementServer', integration: true, net_http: tr
 
     metrics = Net::HTTP.get_response(URI("http://#{host}:#{management_port}/metrics"))
     inspect_metrics(metrics)
+
+    # no treamer and ripper threads for management
+    ths = Thread.list.map(&:name).reject(&:nil?).select { _1.include? 'puma management-server' }.sort
+    expect(ths).to eq(['puma management-server', 'puma management-server tp 001'])
   end
 
   def inspect_metrics(metrics)

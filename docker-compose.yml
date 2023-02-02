@@ -11,12 +11,13 @@ services:
       - mysql-data:/var/lib/mysql:delegated
 
   minio:
-    image: "bitnami/minio"
+    image: 'bitnami/minio:2023.1.31'
     environment:
-      MINIO_ACCESS_KEY: "AccessKey"
-      MINIO_SECRET_KEY: "SecretKey"
+      MINIO_ROOT_USER: "AccessKey"
+      MINIO_ROOT_PASSWORD: "SecretKey"
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio-data:/var/lib/minio:delegated
 
